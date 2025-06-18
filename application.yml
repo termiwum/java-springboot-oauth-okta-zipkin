@@ -17,3 +17,5 @@ logging:
   level:
     '[io.micrometer.tracing]': DEBUG # Nivel de registro para trazas
     '[org.springframework]': INFO   # Nivel de registro para Spring
+    '[org.springframework.cloud.config]': DEBUG
+    '[org.springframework.web]': DEBUG
