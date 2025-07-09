@@ -19,3 +19,8 @@ logging:
     '[org.springframework]': INFO   # Nivel de registro para Spring
     '[org.springframework.cloud.config]': DEBUG
     '[org.springframework.web]': DEBUG
+
+okta:
+  oauth2:
+    issuer: https://dev-02439493.okta.com/oauth2/default
+    audience: api://default
