@@ -1,0 +1,21 @@
+# Ignorar archivos y carpetas generadas
+/target/
+*.class
+
+# Archivos de configuración de IDE
+/.idea/
+*.iml
+.vscode/
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Otros
+*.log
+
+# ¡NO IGNORAR src NI ARCHIVOS DE CONFIGURACIÓN!
+!src/
+!pom.xml
+!HELP.md
+!application.yml
+!application.properties

@@ -1,7 +1,28 @@
-# Read Me First
-The following was discovered as part of building this project:
+# Service Registry
 
-* The original package name 'com.termiwum.service-registry' is invalid and this project uses 'com.termiwum.service_registry' instead.
+Este proyecto es un servidor Eureka para el registro y descubrimiento de microservicios en un entorno Spring Cloud.
+
+## Estructura principal
+- `src/main/java/com/termiwum/service_registry/ServiceRegistryApplication.java`: Clase principal Spring Boot.
+- `src/main/resources/application.yml`: Configuración de Eureka Server.
+- `src/test/java/com/termiwum/service_registry/ServiceRegistryApplicationTests.java`: Prueba básica de contexto.
+- `pom.xml`: Dependencias y configuración de Maven.
+
+## Uso
+1. Ejecuta el proyecto con Maven o tu IDE favorito.
+2. Accede a la consola Eureka en `http://localhost:8761`.
+
+## Notas
+- Asegúrate de tener Java 11+ y Maven instalados.
+- Este proyecto es solo para fines de desarrollo y pruebas.
+
+---
+
+# Read Me First
+La siguiente información fue generada automáticamente por Spring Initializr y Maven.
+
+* El nombre de paquete original 'com.termiwum.service-registry' es inválido; se usa 'com.termiwum.service_registry'.
+* Consulta la documentación oficial de Spring Boot y Maven para más detalles.
 
 # Getting Started
 
