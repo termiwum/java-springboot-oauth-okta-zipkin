@@ -32,22 +32,19 @@ build/
 ### VS Code ###
 .vscode/
 
-# Compilados y dependencias
+# Ignorar archivos y carpetas generadas
 /target/
 *.class
 
 # Archivos de configuración de IDE
 /.idea/
 *.iml
-*.ipr
-*.iws
-/.vscode/
+.vscode/
 
-# Archivos de sistema
-.DS_Store
-Thumbs.db
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
 
-# Archivos de log
+# Otros
 *.log
 
 # Archivos de entorno
@@ -57,6 +54,9 @@ Thumbs.db
 /logs/
 /.mvn/
 
-# Otros
-*.swp
-*.swo
+# ¡NO IGNORAR src NI ARCHIVOS DE CONFIGURACIÓN!
+!src/
+!pom.xml
+!HELP.md
+!application.yml
+!application.properties
