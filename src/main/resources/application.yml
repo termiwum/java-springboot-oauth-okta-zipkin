@@ -1,20 +1,23 @@
+server:
+  port: 9090
+
 spring:
   application:
-    name: CLOUD-GATEWAY
+    name: API-GATEWAY
   config:
     import: configserver:http://localhost:9296
   cloud:
     gateway:
       routes:
-        - id: ORDER-SERVICE
+        - id : ORDER-SERVICE
           uri: lb://ORDER-SERVICE
           predicates:
-            - Path=/orders/**
+            - Path=/order/**
           filters:
             - name: CircuitBreaker
               args:
-                name: orderServiceCircuitBreaker
-                fallbackUri: forward:/orderServiceFallback
+                name: ORDER-SERVICE
+                fallbackuri: forward:/orderServiceFallBack
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 1
@@ -22,12 +25,12 @@ spring:
         - id: PAYMENT-SERVICE
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Path=/payments/**
+            - Path=/payment/**
           filters:
             - name: CircuitBreaker
               args:
-                name: paymentServiceCircuitBreaker
-                fallbackUri: forward:/paymentServiceFallback
+                name: PAYMENT-SERVICE
+                fallbackuri: forward:/paymentServiceFallBack
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 1
@@ -35,37 +38,21 @@ spring:
         - id: PRODUCT-SERVICE
           uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/products/**
+            - Path=/product/**
           filters:
             - name: CircuitBreaker
               args:
-                name: productServiceCircuitBreaker
-                fallbackUri: forward:/productServiceFallback
+                name: PRODUCT-SERVICE
+                fallbackuri: forward:/productServiceFallBack
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 1
-  security:
-    oauth2:
-      client:
-        registration:
-          okta:
-            client-id: 0oapqvhkafcaZpm4Z5d7
-            client-secret: u9-DfB9zDGMAZnlynGCEvzlzAFe4qKiXO8fTSAE852jWyis6lxnR0-jqtXHBdwfL
-            redirect-uri: "{baseUrl}/login/oauth2/code/okta"
-            scope: openid, profile, email, offline_access
-            authorization-grant-type: authorization_code
-        provider:
-          okta:
-            issuer-uri: https://dev-02439493.okta.com/oauth2/default
 
 okta:
   oauth2:
-    issuer: https://dev-02439493.okta.com/oauth2/default
+    issuer: https://dev-15585796.okta.com/oauth2/default
     audience: api://default
     client-id: 0oapqvhkafcaZpm4Z5d7
     client-secret: u9-DfB9zDGMAZnlynGCEvzlzAFe4qKiXO8fTSAE852jWyis6lxnR0-jqtXHBdwfL
-    scopes: openid, profile, email, offline_access
-
-server:
-  port: 9090
+    scopes: openid, email, profile, offline_access
