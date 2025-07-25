@@ -34,8 +34,10 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('Admin')  || hasAuthority('Customer') || hasAuthority('SCOPE_internal')")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findOne(@PathVariable long id) {
-        return new ResponseEntity<>(productService.findOne(id), HttpStatus.OK);
+    public ResponseEntity<ProductResponse> getById(@PathVariable long id) {
+
+        ProductResponse productResponse = productService.getById(id);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
     @PutMapping("/reduceQuantity/{id}")

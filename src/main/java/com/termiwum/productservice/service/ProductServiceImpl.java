@@ -27,25 +27,27 @@ public class ProductServiceImpl implements ProductService {
         Product product = Product.builder()
                 .productName(productRequest.getName())
                 .price(productRequest.getPrice())
-                .quantity(productRequest.getQuantity()).build();
-
-        log.info("product created.");
+                .quantity(productRequest.getQuantity())
+                .build();
 
         productRepository.save(product);
+
+        log.info("product created.");
         return product.getProductId();
     }
 
     @Override
-    public ProductResponse findOne(long id) {
-        log.info("finding product..");
+    public ProductResponse getById(long id) {
+        log.info("finding product for productId: {}", id);
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Product not found with id: " + id, "PRODUCT_NOT_FOUND",
-                        HttpStatus.NOT_FOUND.value()));
+                .orElseThrow(
+                        () -> new CustomException(
+                                "Product not found with id: " + id,
+                                "PRODUCT_NOT_FOUND"));
 
         ProductResponse productResponse = new ProductResponse();
 
         copyProperties(product, productResponse);
-        log.info("product found.");
         return productResponse;
 
     }
@@ -55,12 +57,13 @@ public class ProductServiceImpl implements ProductService {
         log.info("reducing product quantity {} for id: {}", quantity, productId);
         Product product = productRepository.findById(productId)
                 .orElseThrow(
-                        () -> new CustomException("Product not found with id: " + productId, "PRODUCT_NOT_FOUND",
-                                HttpStatus.NOT_FOUND.value()));
+                        () -> new CustomException(
+                                "Product not found with id: " + productId,
+                                "PRODUCT_NOT_FOUND"));
 
         if (product.getQuantity() < quantity) {
-            throw new CustomException("Insufficient product quantity for id: " + productId, "INSUFFICIENT_QUANTITY",
-                    HttpStatus.BAD_REQUEST.value());
+            throw new CustomException("Insufficient product quantity for id: " + productId,
+                    "INSUFFICIENT_QUANTITY");
         }
 
         product.setQuantity(product.getQuantity() - quantity);
