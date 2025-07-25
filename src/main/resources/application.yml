@@ -12,6 +12,7 @@ spring:
         - id : ORDER-SERVICE
           uri: lb://ORDER-SERVICE
           predicates:
+            - Path=/orders/**
             - Path=/order/**
           filters:
             - name: CircuitBreaker
@@ -25,7 +26,7 @@ spring:
         - id: PAYMENT-SERVICE
           uri: lb://PAYMENT-SERVICE
           predicates:
-            - Path=/payment/**
+            - Path=/payments/**
           filters:
             - name: CircuitBreaker
               args:
@@ -56,3 +57,9 @@ okta:
     client-id: 0oapqvhkafcaZpm4Z5d7
     client-secret: u9-DfB9zDGMAZnlynGCEvzlzAFe4qKiXO8fTSAE852jWyis6lxnR0-jqtXHBdwfL
     scopes: openid, email, profile, offline_access
+
+logging:
+  level:
+    "[com.termiwum.cloudgateway.controller]": INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
