@@ -9,7 +9,7 @@ import com.termiwum.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+// import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,14 +25,15 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PreAuthorize("hasAuthority('Admin')")
+    // @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     public ResponseEntity<Long> add(@RequestBody ProductRequest productRequest) {
         long id = productService.add(productRequest);
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('Admin')  || hasAuthority('Customer') || hasAuthority('SCOPE_internal')")
+    // @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer') ||
+    // hasAuthority('SCOPE_internal')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getById(@PathVariable long id) {
 
