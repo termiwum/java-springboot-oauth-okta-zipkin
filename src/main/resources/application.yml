@@ -49,6 +49,13 @@ spring:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 1
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-15585796.okta.com/oauth2/default
+          audience: api://default
+
 okta:
   oauth2:
     issuer: https://dev-15585796.okta.com/oauth2/default
