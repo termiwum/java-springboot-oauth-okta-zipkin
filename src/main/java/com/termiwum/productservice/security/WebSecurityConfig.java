@@ -16,8 +16,6 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorize -> authorize
-                .requestMatchers("/products/**")
-                .hasAuthority("SCOPE_internal")
                 .anyRequest()
                 .authenticated())
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);

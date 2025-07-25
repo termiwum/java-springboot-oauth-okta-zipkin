@@ -6,7 +6,7 @@ import com.termiwum.productservice.model.ProductResponse;
 public interface ProductService {
     long add(ProductRequest productRequest);
 
-    ProductResponse findOne(long id);
+    ProductResponse getById(long id);
 
     void reduceQuantity(long productId, long quantity);
 }
