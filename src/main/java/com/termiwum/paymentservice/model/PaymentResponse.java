@@ -19,5 +19,4 @@ public class PaymentResponse {
     private long amount;
     private Instant paymentDate;
     private long orderId;
-
 }

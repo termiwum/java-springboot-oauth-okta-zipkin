@@ -1,9 +1,9 @@
 package com.termiwum.paymentservice.model;
 
 public enum PaymentMode {
-    CREDIT_CARD,
+    CASH,
+    PAYPAL,
     DEBIT_CARD,
-    NET_BANKING,
-    UPI,
-    WALLET
+    CREDIT_CARD,
+    APPLE_PAY
 }

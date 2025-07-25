@@ -14,7 +14,7 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorize -> authorize
-                .requestMatchers("/payments/**")
+                .antMatchers("/payments/**")
                 .hasAuthority("SCOPE_internal")
                 .anyRequest()
                 .authenticated())
