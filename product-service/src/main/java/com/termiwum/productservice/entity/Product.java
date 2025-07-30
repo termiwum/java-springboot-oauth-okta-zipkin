@@ -1,6 +1,6 @@
 package com.termiwum.productservice.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

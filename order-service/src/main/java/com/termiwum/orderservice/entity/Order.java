@@ -2,7 +2,7 @@ package com.termiwum.orderservice.entity;
 
 import java.time.Instant;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
