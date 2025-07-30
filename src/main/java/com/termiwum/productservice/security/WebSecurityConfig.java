@@ -15,9 +15,13 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorize -> authorize
-                .anyRequest()
-                .authenticated())
+        http
+                .csrf().disable()
+                .authorizeRequests(authorize -> authorize
+                        // .antMatchers("/products/**")
+                        // .hasAuthority("SCOPE_internal")
+                        .anyRequest()
+                        .authenticated())
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         return http.build();
     }
