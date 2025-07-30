@@ -18,6 +18,7 @@ spring:
 
 logging:
   level:
-    "[com.termiwum.paymentservice.controller]": INFO
+    "[com.termiwum.paymentservice.controller]": DEBUG
+    "[com.termiwum.paymentservice.service]": DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
