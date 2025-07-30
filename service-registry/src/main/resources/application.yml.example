@@ -1,0 +1,17 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: service-registry
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+logging:
+  level:
+    "[com.termiwum.serviceregistry.controller]": INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+
+# Service Registry (Eureka Server) - No requiere variables de entorno adicionales
+# Este servicio actúa como el registro central para todos los microservicios
