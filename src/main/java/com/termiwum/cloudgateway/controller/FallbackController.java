@@ -1,24 +1,24 @@
 package com.termiwum.cloudgateway.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FallbackController {
 
-    @GetMapping("/orderServiceFallback")
+    @RequestMapping("/orderServiceFallback")
     public String orderServiceFallback() {
-        return "Order Service is currently unavailable. Please try again later.";
+        return "El servicio de órdenes no está disponible. Por favor, inténtalo más tarde.";
     }
 
-    @GetMapping("/paymentServiceFallback")
+    @RequestMapping("/paymentServiceFallback")
     public String paymentServiceFallback() {
-        return "Payment Service is currently unavailable. Please try again later.";
+        return "El servicio de pagos no está disponible. Por favor, inténtalo más tarde.";
     }
 
-    @GetMapping("/productServiceFallback")
+    @RequestMapping("/productServiceFallback")
     public String productServiceFallback() {
-        return "Product Service is currently unavailable. Please try again later.";
+        return "El servicio de productos no está disponible. Por favor, inténtalo más tarde.";
     }
 
 }
