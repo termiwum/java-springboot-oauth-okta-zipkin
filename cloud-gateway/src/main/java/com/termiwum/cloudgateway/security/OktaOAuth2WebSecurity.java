@@ -40,14 +40,17 @@ public class OktaOAuth2WebSecurity {
 
         @Bean
         public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
-                http
-                                .csrf().disable()
-                                .authorizeExchange()
-                                .anyExchange().authenticated()
-                                .and()
-                                .oauth2ResourceServer()
-                                .jwt()
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter());
-                return http.build();
+                return http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeExchange(exchanges -> exchanges
+                                                .pathMatchers("/health", "/actuator/**").permitAll()
+                                                .pathMatchers("/oauth2/**", "/login/**").permitAll()
+                                                .anyExchange().authenticated())
+                                .oauth2Login(oauth2 -> {
+                                })
+                                .oauth2ResourceServer(oauth2 -> oauth2
+                                                .jwt(jwt -> jwt.jwtAuthenticationConverter(
+                                                                jwtAuthenticationConverter())))
+                                .build();
         }
 }

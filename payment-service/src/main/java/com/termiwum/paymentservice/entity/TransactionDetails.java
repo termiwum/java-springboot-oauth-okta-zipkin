@@ -1,7 +1,8 @@
 package com.termiwum.paymentservice.entity;
 
 import java.time.Instant;
-import javax.persistence.*;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "TRANSACTION_DETAILS")
