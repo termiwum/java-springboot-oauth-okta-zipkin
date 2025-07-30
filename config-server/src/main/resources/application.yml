@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/termiwum/spring-boot-config
+          uri: https://github.com/termiwum/java-springboot-oauth-okta-zipkin/tree/main/spring-boot-config
 eureka:
   instance:
     prefer-ip-address: true
