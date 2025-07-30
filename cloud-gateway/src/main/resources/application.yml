@@ -55,16 +55,16 @@ spring:
         jwt:
           issuer-uri: https://dev-02439493.okta.com/oauth2/default
           audience: api://default
-          client-id: {client-id}
-          client-secret: {client-secret}
+          client-id: 0oapqvhkafcaZpm4Z5d7
+          client-secret: u9-DfB9zDGMAZnlynGCEvzlzAFe4qKiXO8fTSAE852jWyis6lxnR0-jqtXHBdwfL
           scopes: openid, email, profile, offline_access
 
 okta:
   oauth2:
     issuer: https://dev-02439493.okta.com/oauth2/default
     audience: api://default
-    client-id: {client-id}
-    client-secret: {client-secret}
+    client-id: 0oapqvhkafcaZpm4Z5d7
+    client-secret: u9-DfB9zDGMAZnlynGCEvzlzAFe4qKiXO8fTSAE852jWyis6lxnR0-jqtXHBdwfL
     scopes: openid, email, profile, offline_access
 
 logging:
