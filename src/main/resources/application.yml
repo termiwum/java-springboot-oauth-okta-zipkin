@@ -52,7 +52,10 @@ microservice:
 
 logging:
   level:
-    "[com.termiwum.orderservice.controller]": INFO
+    "[com.termiwum.orderservice.controller]": DEBUG
+    "[com.termiwum.orderservice.service]": DEBUG
+    "[com.termiwum.orderservice.external.decoder]": DEBUG
+    "[com.termiwum.orderservice.external.intercept]": DEBUG
     "[org.springframework.security]": DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
