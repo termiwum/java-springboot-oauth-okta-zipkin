@@ -17,5 +17,5 @@
 !src/
 !pom.xml
 !HELP.md
-!application.yml
+application.yml
 !application.properties
