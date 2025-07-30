@@ -2,6 +2,8 @@ package com.termiwum.paymentservice.service;
 
 import java.time.Instant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +13,10 @@ import com.termiwum.paymentservice.model.PaymentRequest;
 import com.termiwum.paymentservice.model.PaymentResponse;
 import com.termiwum.paymentservice.repository.TransactionDetailsRepository;
 
-import lombok.extern.log4j.Log4j2;
-
 @Service
-@Log4j2
 public class PaymentServiceImpl implements PaymentService {
+
+    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
     @Autowired
     private TransactionDetailsRepository transactionDetailsRepository;
@@ -25,14 +26,13 @@ public class PaymentServiceImpl implements PaymentService {
 
         log.info("Recording payment details: {}", request);
 
-        TransactionDetails transactionDetails = TransactionDetails.builder()
-                .orderId(request.getOrderId())
-                .amount(request.getAmount())
-                .referenceNumber(request.getReferenceNumber())
-                .paymentMode(request.getPaymentMode().name())
-                .paymentStatus("SUCCESS")
-                .paymentDate(Instant.now())
-                .build();
+        TransactionDetails transactionDetails = new TransactionDetails(
+                request.orderId(),
+                request.paymentMode().name(),
+                request.referenceNumber(),
+                Instant.now(),
+                "SUCCESS",
+                request.amount());
 
         transactionDetailsRepository.save(transactionDetails);
 
@@ -52,14 +52,13 @@ public class PaymentServiceImpl implements PaymentService {
             return null;
         }
 
-        PaymentResponse response = PaymentResponse.builder()
-                .paymentId(transactionDetails.getId())
-                .status(transactionDetails.getPaymentStatus())
-                .paymentMode(PaymentMode.valueOf(transactionDetails.getPaymentMode()))
-                .amount(transactionDetails.getAmount())
-                .paymentDate(transactionDetails.getPaymentDate())
-                .orderId(transactionDetails.getOrderId())
-                .build();
+        PaymentResponse response = new PaymentResponse(
+                transactionDetails.getId(),
+                transactionDetails.getPaymentStatus(),
+                PaymentMode.valueOf(transactionDetails.getPaymentMode()),
+                transactionDetails.getAmount(),
+                transactionDetails.getPaymentDate(),
+                transactionDetails.getOrderId());
 
         log.info("Payment details fetched successfully for order ID: {}", orderId);
 
