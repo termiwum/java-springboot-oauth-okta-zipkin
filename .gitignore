@@ -1,0 +1,32 @@
+# Ignorar archivos y carpetas generadas por Maven
+**/target/
+**/*.class
+
+# Archivos de configuración de IDE
+**/.idea/
+**/*.iml
+**/.vscode/
+**/.settings/
+**/.project
+**/.classpath
+
+# Maven Wrapper
+**/.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+**/*.log
+
+# Archivos temporales del SO
+**/.DS_Store
+**/Thumbs.db
+
+# Archivos de configuración sensibles (contienen credenciales)
+**/src/main/resources/application.yml
+**/src/main/resources/application.properties
+
+# EXCEPCIONES: Permitir archivos de configuración de ejemplo o plantillas
+!**/application.yml.example
+!**/application.properties.example
+
+# Permitir configuración compartida no sensible
+!spring-boot-config/application.yml

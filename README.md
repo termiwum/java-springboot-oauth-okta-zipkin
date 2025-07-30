@@ -161,6 +161,16 @@ Todos los servicios incluyen Spring Boot Actuator para:
 3. Zipkin Server (puerto 9411)
 4. Cuenta de Okta configurada
 
+### ⚙️ Configuración de Variables de Entorno
+Antes de ejecutar los servicios, debes configurar las variables de entorno necesarias. 
+
+**📋 Consulta el archivo `ENVIRONMENT_SETUP.md` para instrucciones detalladas.**
+
+Variables principales requeridas:
+- `DB_USERNAME` y `DB_PASSWORD` - Credenciales de MySQL
+- `OKTA_ISSUER_URI` - URI del emisor de Okta
+- `OKTA_CLIENT_ID` y `OKTA_CLIENT_SECRET` - Credenciales de la aplicación Okta
+
 ### Orden de inicio recomendado
 1. **Config Server** (puerto 9296)
 2. **Service Registry** (puerto 8761)
