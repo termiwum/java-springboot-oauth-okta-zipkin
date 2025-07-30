@@ -30,3 +30,4 @@
 
 # Permitir configuración compartida no sensible
 !spring-boot-config/application.yml
+order-service/src/main/resources/application.yml
