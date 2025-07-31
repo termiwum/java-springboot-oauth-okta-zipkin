@@ -20,10 +20,11 @@ logging:
     '[org.springframework.cloud.config]': DEBUG
     '[org.springframework.web]': DEBUG
 
-okta:
-  oauth2:
-    issuer: https://dev-02439493.okta.com/oauth2/default
-    audience: api://default
+security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-knq5qdss5uzcsuyw.us.auth0.com/
 
 spring:
   security:
