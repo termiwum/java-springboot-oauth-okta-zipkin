@@ -10,11 +10,11 @@ DB_USERNAME=admin
 DB_PASSWORD=your_secure_password
 ```
 
-### Configuración de Okta
+### Configuración de Auth0
 ```bash
-OKTA_ISSUER_URI=https://your-okta-domain.okta.com/oauth2/default
-OKTA_CLIENT_ID=your_okta_client_id
-OKTA_CLIENT_SECRET=your_okta_client_secret
+AUTH0_ISSUER_URI=https://dev-knq5qdss5uzcsuyw.us.auth0.com/
+AUTH0_CLIENT_ID=your_auth0_client_id
+AUTH0_CLIENT_SECRET=your_auth0_client_secret
 ```
 
 ## 🚀 Configuración para Desarrollo
@@ -24,18 +24,18 @@ En Windows PowerShell:
 ```powershell
 $env:DB_USERNAME = "admin"
 $env:DB_PASSWORD = "admin"
-$env:OKTA_ISSUER_URI = "https://dev-12345.okta.com/oauth2/default"
-$env:OKTA_CLIENT_ID = "your_client_id"
-$env:OKTA_CLIENT_SECRET = "your_client_secret"
+$env:AUTH0_ISSUER_URI = "https://dev-knq5qdss5uzcsuyw.us.auth0.com/"
+$env:AUTH0_CLIENT_ID = "your_client_id"
+$env:AUTH0_CLIENT_SECRET = "your_client_secret"
 ```
 
 En Linux/Mac:
 ```bash
 export DB_USERNAME=admin
 export DB_PASSWORD=admin
-export OKTA_ISSUER_URI=https://dev-12345.okta.com/oauth2/default
-export OKTA_CLIENT_ID=your_client_id
-export OKTA_CLIENT_SECRET=your_client_secret
+export AUTH0_ISSUER_URI=https://dev-knq5qdss5uzcsuyw.us.auth0.com/
+export AUTH0_CLIENT_ID=your_client_id
+export AUTH0_CLIENT_SECRET=your_client_secret
 ```
 
 ### Opción 2: Archivo .env (no incluido en git)
@@ -43,9 +43,9 @@ Crea un archivo `.env` en la raíz de cada microservicio:
 ```
 DB_USERNAME=admin
 DB_PASSWORD=admin
-OKTA_ISSUER_URI=https://dev-12345.okta.com/oauth2/default
-OKTA_CLIENT_ID=your_client_id
-OKTA_CLIENT_SECRET=your_client_secret
+AUTH0_ISSUER_URI=https://dev-knq5qdss5uzcsuyw.us.auth0.com/
+AUTH0_CLIENT_ID=your_client_id
+AUTH0_CLIENT_SECRET=your_client_secret
 ```
 
 ### Opción 3: IDE Configuration

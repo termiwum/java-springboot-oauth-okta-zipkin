@@ -1,6 +1,6 @@
-# Java SpringBoot OAuth Okta Zipkin - Microservices Architecture
+# Java SpringBoot OAuth Auth0 Zipkin - Microservices Architecture
 
-Este workspace contiene una arquitectura completa de microservicios construida con Spring Boot, implementando autenticación OAuth2 con Okta y monitoreo distribuido con Zipkin.
+Este workspace contiene una arquitectura completa de microservicios construida con Spring Boot, implementando autenticación OAuth2 con Auth0 y monitoreo distribuido con Zipkin.
 
 ## 📋 Resumen de Proyectos
 
@@ -10,7 +10,7 @@ Este workspace contiene una arquitectura completa de microservicios construida c
 
 **Características principales:**
 - **Tecnología:** Spring Cloud Gateway con WebFlux
-- **Autenticación:** OAuth2 con Okta
+- **Autenticación:** OAuth2 con Auth0
 - **Balanceador de carga:** Integrado con Eureka Service Discovery
 - **Circuit Breaker:** Implementado para resiliencia
 - **Rate Limiting:** Control de tráfico con Redis
@@ -47,7 +47,7 @@ Este workspace contiene una arquitectura completa de microservicios construida c
 
 **Características principales:**
 - **Base de datos:** MySQL (order_db)
-- **Seguridad:** OAuth2 Resource Server con Okta
+- **Seguridad:** OAuth2 Resource Server con Auth0
 - **Autorización:** Role-based access control (Customer, Admin)
 - **Comunicación:** Feign Client para llamadas a otros servicios
 - **Monitoreo:** Zipkin tracing integrado
@@ -63,7 +63,7 @@ Este workspace contiene una arquitectura completa de microservicios construida c
 
 **Características principales:**
 - **Base de datos:** MySQL
-- **Seguridad:** OAuth2 Resource Server con Okta
+- **Seguridad:** OAuth2 Resource Server con Auth0
 - **Autorización:** Acceso para Customer, Admin y SCOPE_internal
 - **Monitoreo:** Zipkin sleuth integration
 - **Comunicación:** Eureka client para service discovery
@@ -74,7 +74,7 @@ Este workspace contiene una arquitectura completa de microservicios construida c
 
 **Características principales:**
 - **Base de datos:** MySQL
-- **Seguridad:** OAuth2 Resource Server con Okta
+- **Seguridad:** OAuth2 Resource Server con Auth0
 - **Autorización:** Basada en roles y scopes
 - **API:** RESTful endpoints para gestión de productos
 - **Monitoreo:** Integración con Zipkin
@@ -85,7 +85,7 @@ Este workspace contiene una arquitectura completa de microservicios construida c
 **Configuraciones incluidas:**
 - **Eureka Client:** Configuración para service discovery
 - **Zipkin:** Configuración de tracing distribuido (100% sampling)
-- **OAuth2:** Configuración de Okta issuer y audience
+- **OAuth2:** Configuración de Auth0 issuer y audience
 - **Logging:** Configuración de logs para debugging
 
 ## 🏗️ Arquitectura del Sistema
@@ -115,11 +115,11 @@ Este workspace contiene una arquitectura completa de microservicios construida c
 
 ## 🔐 Seguridad y Autenticación
 
-### OAuth2 con Okta
-- **Issuer:** `https://dev-02439493.okta.com/oauth2/default`
-- **Audience:** `api://default`
+### OAuth2 con Auth0
+- **Issuer:** `https://dev-knq5qdss5uzcsuyw.us.auth0.com/`
+- **Audience:** `https://dev-knq5qdss5uzcsuyw.us.auth0.com/api/v2/`
 - **Grant Types:** Authorization Code, Client Credentials
-- **Scopes:** internal, custom scopes
+- **Scopes:** openid, email, profile, offline_access, Customer, Admin
 
 ### Roles y Autorización
 - **Customer:** Acceso a operaciones básicas (crear pedidos, ver propios pedidos)
@@ -142,24 +142,65 @@ Todos los servicios incluyen Spring Boot Actuator para:
 
 ## 🚀 Tecnologías Utilizadas
 
-- **Framework:** Spring Boot 2.7.3 / 3.5.1-SNAPSHOT
-- **Java:** 11 / 17
-- **Spring Cloud:** 2021.0.3 / 2025.0.0
-- **Base de datos:** MySQL
-- **Service Discovery:** Netflix Eureka
-- **API Gateway:** Spring Cloud Gateway
-- **Autenticación:** OAuth2 + Okta
-- **Monitoreo:** Zipkin + Spring Cloud Sleuth
+### Core Technologies
+- **Java:** 21 (LTS)
+- **Spring Boot:** 3.5.4
+- **Spring Cloud:** 2025.0.0
+- **Maven:** 3.13.0
+- **Lombok:** 1.18.30
+
+### Infrastructure & Service Discovery
+- **Service Registry:** Netflix Eureka Server
+- **API Gateway:** Spring Cloud Gateway (WebFlux)
+- **Configuration:** Spring Cloud Config Server
+- **Load Balancing:** Spring Cloud LoadBalancer
+
+### Database & Persistence
+- **Base de datos:** MySQL 
+- **ORM:** Spring Data JPA
+- **Connector:** MySQL Connector/J
+
+### Security & Authentication
+- **OAuth2:** Spring Security OAuth2 Resource Server
+- **OAuth2 Client:** Spring Security OAuth2 Client
+- **Identity Provider:** Auth0 (configurado para dev-knq5qdss5uzcsuyw.us.auth0.com)
+- **Authorization:** Role-based access control (RBAC)
+
+### Monitoring & Observability
+- **Distributed Tracing:** Micrometer Tracing with Brave
+- **Tracing Backend:** Zipkin Reporter
+- **Metrics:** Spring Boot Actuator
+- **Health Checks:** Actuator Health Endpoints
+
+### Resilience & Fault Tolerance
+- **Circuit Breaker:** Resilience4j
+- **Rate Limiting:** Redis (Reactive)
+- **Timeout & Retry:** Resilience4j patterns
+
+### Communication
+- **HTTP Client:** OpenFeign
+- **Reactive Programming:** Spring WebFlux
+- **Service-to-Service:** Eureka Client Discovery
+
+### Development & Testing
 - **Build Tool:** Maven
-- **Testing:** JUnit + Jacoco + SonarQube
+- **Testing Framework:** Spring Boot Test
+- **Code Coverage:** Jacoco
+- **Code Quality:** SonarQube integration
+- **Mock Testing:** WireMock (en Order Service)
+
+### Additional Libraries
+- **Reactive Redis:** Spring Data Redis Reactive
+- **Jakarta Servlet:** Jakarta Servlet API
+- **JSON Processing:** Incluido en Spring Boot
 
 ## 🛠️ Configuración y Ejecución
 
 ### Prerrequisitos
-1. Java 11/17
+1. Java 21
 2. MySQL Server
 3. Zipkin Server (puerto 9411)
-4. Cuenta de Okta configurada
+4. Cuenta de Auth0 configurada
 
 ### ⚙️ Configuración de Variables de Entorno
 Antes de ejecutar los servicios, debes configurar las variables de entorno necesarias. 
@@ -168,8 +209,8 @@ Antes de ejecutar los servicios, debes configurar las variables de entorno neces
 
 Variables principales requeridas:
 - `DB_USERNAME` y `DB_PASSWORD` - Credenciales de MySQL
-- `OKTA_ISSUER_URI` - URI del emisor de Okta
-- `OKTA_CLIENT_ID` y `OKTA_CLIENT_SECRET` - Credenciales de la aplicación Okta
+- `AUTH0_ISSUER_URI` - URI del emisor de Auth0
+- `AUTH0_CLIENT_ID` y `AUTH0_CLIENT_SECRET` - Credenciales de la aplicación Auth0
 
 ### Orden de inicio recomendado
 1. **Config Server** (puerto 9296)
@@ -189,7 +230,7 @@ Crear las siguientes bases de datos en MySQL:
 - Implementación de Circuit Breaker para mayor resiliencia
 - Rate Limiting configurado en el API Gateway
 - Trazabilidad completa de requests a través de Zipkin
-- Autenticación y autorización robusta con OAuth2 y Okta
+- Autenticación y autorización robusta con OAuth2 y Auth0
 - Arquitectura preparada para escalabilidad horizontal
 
 ## 🔧 Configuración de Desarrollo
