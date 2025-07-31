@@ -20,15 +20,9 @@ logging:
     '[org.springframework.cloud.config]': DEBUG
     '[org.springframework.web]': DEBUG
 
-security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://dev-knq5qdss5uzcsuyw.us.auth0.com/
-
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://dev-02439493.okta.com/oauth2/default
+          issuer-uri: https://dev-knq5qdss5uzcsuyw.us.auth0.com/
