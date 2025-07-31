@@ -19,10 +19,3 @@ logging:
     '[org.springframework]': INFO   # Nivel de registro para Spring
     '[org.springframework.cloud.config]': DEBUG
     '[org.springframework.web]': DEBUG
-
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://dev-knq5qdss5uzcsuyw.us.auth0.com/
