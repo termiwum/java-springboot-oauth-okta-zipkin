@@ -1,9 +1,8 @@
 package com.termiwum.orderservice.external.intercept;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+
+import com.termiwum.orderservice.service.TokenService;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -11,19 +10,18 @@ import feign.RequestTemplate;
 @Configuration
 public class OAuthRequestInterceptor implements RequestInterceptor {
 
-    @Autowired
-    private OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager;
+        private final TokenService tokenService;
 
-    @Override
-    public void apply(RequestTemplate template) {
-        template.header("Authorization", "Bearer " +
-                oAuth2AuthorizedClientManager
-                        .authorize(OAuth2AuthorizeRequest
-                                .withClientRegistrationId("internal-client")
-                                .principal("internal")
-                                .build())
-                        .getAccessToken()
-                        .getTokenValue());
-    }
+        public OAuthRequestInterceptor(TokenService tokenService) {
+                this.tokenService = tokenService;
+        }
 
+        @Override
+        public void apply(RequestTemplate template) {
+                String token = tokenService.extractToken(); // Get token from TokenService
+
+                if (token != null) {
+                        template.header("Authorization", "Bearer " + token);
+                }
+        }
 }

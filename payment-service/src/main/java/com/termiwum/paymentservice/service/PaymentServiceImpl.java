@@ -1,9 +1,6 @@
 package com.termiwum.paymentservice.service;
 
 import java.time.Instant;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +10,11 @@ import com.termiwum.paymentservice.model.PaymentRequest;
 import com.termiwum.paymentservice.model.PaymentResponse;
 import com.termiwum.paymentservice.repository.TransactionDetailsRepository;
 
-@Service
-public class PaymentServiceImpl implements PaymentService {
+import lombok.extern.log4j.Log4j2;
 
-    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
+@Service
+@Log4j2
+public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private TransactionDetailsRepository transactionDetailsRepository;
@@ -26,13 +24,14 @@ public class PaymentServiceImpl implements PaymentService {
 
         log.info("Recording payment details: {}", request);
 
-        TransactionDetails transactionDetails = new TransactionDetails(
-                request.orderId(),
-                request.paymentMode().name(),
-                request.referenceNumber(),
-                Instant.now(),
-                "SUCCESS",
-                request.amount());
+        TransactionDetails transactionDetails = TransactionDetails.builder()
+                .orderId(request.orderId())
+                .paymentMode(request.paymentMode().name())
+                .referenceNumber(request.referenceNumber())
+                .paymentDate(Instant.now())
+                .paymentStatus("SUCCESS")
+                .amount(request.amount())
+                .build();
 
         transactionDetailsRepository.save(transactionDetails);
 

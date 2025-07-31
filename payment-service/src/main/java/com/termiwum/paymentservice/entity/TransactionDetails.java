@@ -3,9 +3,17 @@ package com.termiwum.paymentservice.entity;
 import java.time.Instant;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "TRANSACTION_DETAILS")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class TransactionDetails {
 
     @Id
@@ -29,74 +37,4 @@ public class TransactionDetails {
 
     @Column(name = "AMOUNT")
     private long amount;
-
-    public TransactionDetails() {
-    }
-
-    public TransactionDetails(long orderId, String paymentMode, String referenceNumber,
-            Instant paymentDate, String paymentStatus, long amount) {
-        this.orderId = orderId;
-        this.paymentMode = paymentMode;
-        this.referenceNumber = referenceNumber;
-        this.paymentDate = paymentDate;
-        this.paymentStatus = paymentStatus;
-        this.amount = amount;
-    }
-
-    // Getters and Setters
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getPaymentMode() {
-        return paymentMode;
-    }
-
-    public void setPaymentMode(String paymentMode) {
-        this.paymentMode = paymentMode;
-    }
-
-    public String getReferenceNumber() {
-        return referenceNumber;
-    }
-
-    public void setReferenceNumber(String referenceNumber) {
-        this.referenceNumber = referenceNumber;
-    }
-
-    public Instant getPaymentDate() {
-        return paymentDate;
-    }
-
-    public void setPaymentDate(Instant paymentDate) {
-        this.paymentDate = paymentDate;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(long amount) {
-        this.amount = amount;
-    }
 }

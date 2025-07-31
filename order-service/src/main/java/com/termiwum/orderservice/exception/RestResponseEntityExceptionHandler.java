@@ -11,14 +11,14 @@ import com.termiwum.orderservice.external.response.ErrorResponse;
 @Log4j2
 public class RestResponseEntityExceptionHandler {
 
-    public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception) {
-        log.debug("Handling CustomException: {} | Code: {} | Status: {}", exception.getMessage(),
-                exception.getErrorCode(), exception.getStatus());
-        return new ResponseEntity<>(
-                ErrorResponse.builder()
-                        .errorMessage(exception.getMessage())
-                        .errorCode(exception.getErrorCode())
-                        .build(),
-                HttpStatus.valueOf(exception.getStatus()));
-    }
+        public ResponseEntity<ErrorResponse> handleCustomException(CustomException exception) {
+                log.info("Handling CustomException: {} | Code: {} | Status: {}", exception.getMessage(),
+                                exception.getErrorCode(), exception.getStatus());
+                return new ResponseEntity<>(
+                                ErrorResponse.builder()
+                                                .errorMessage(exception.getMessage())
+                                                .errorCode(exception.getErrorCode())
+                                                .build(),
+                                HttpStatus.valueOf(exception.getStatus()));
+        }
 }

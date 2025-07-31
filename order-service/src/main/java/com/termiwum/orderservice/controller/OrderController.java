@@ -20,22 +20,22 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PreAuthorize("hasAuthority('Customer')")
+    @PreAuthorize("hasAnyRole('Customer')")
     @PostMapping("placeOrder")
     public ResponseEntity<Long> placeOrder(@RequestBody OrderRequest orderRequest) {
-        log.debug("Received placeOrder request: {}", orderRequest);
+        log.info("Received placeOrder request: {}", orderRequest);
         long orderId = orderService.placeOrder(orderRequest);
         log.info("Order placed with ID: {}", orderId);
-        log.debug("Returning response with orderId: {}", orderId);
+        log.info("Returning response with orderId: {}", orderId);
         return new ResponseEntity<>(orderId, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer')")
+    @PreAuthorize("hasAnyRole('Admin', 'Customer')")
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrderDetails(@PathVariable long orderId) {
-        log.debug("Received getOrderDetails request for orderId: {}", orderId);
+        log.info("Received getOrderDetails request for orderId: {}", orderId);
         OrderResponse orderResponse = orderService.getOrderDetails(orderId);
-        log.debug("Returning response: {}", orderResponse);
+        log.info("Returning response: {}", orderResponse);
         return new ResponseEntity<>(orderResponse, HttpStatus.OK);
     }
 

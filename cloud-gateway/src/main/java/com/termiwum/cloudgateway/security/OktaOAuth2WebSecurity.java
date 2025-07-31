@@ -1,56 +1,87 @@
 package com.termiwum.cloudgateway.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
-import reactor.core.publisher.Flux;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebFluxSecurity
 public class OktaOAuth2WebSecurity {
 
-        private static final Logger log = LoggerFactory.getLogger(OktaOAuth2WebSecurity.class);
+        @Value("${auth0.audience}")
+        private String audience;
 
-        @Bean
-        public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
-                ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
-                converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-                        Object groups = jwt.getClaims().get("groups");
-                        if (groups instanceof java.util.List) {
-                                java.util.List<?> groupList = (java.util.List<?>) groups;
-                                var authorities = groupList.stream()
-                                                .map(String::valueOf)
-                                                .map(SimpleGrantedAuthority::new)
-                                                .toList();
-                                log.info("Authorities extraídas del JWT: {}", authorities);
-                                return Flux.fromIterable(authorities);
-                        }
-                        log.warn("No se encontraron authorities en el claim 'groups'. Claims: {}", jwt.getClaims());
-                        return Flux.empty();
-                });
-                return converter;
+        private final ReactiveClientRegistrationRepository clientRegistrationRepository;
+
+        public OktaOAuth2WebSecurity(ReactiveClientRegistrationRepository clientRegistrationRepository) {
+                this.clientRegistrationRepository = clientRegistrationRepository;
         }
 
         @Bean
-        public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
-                return http
-                                .csrf(csrf -> csrf.disable())
-                                .authorizeExchange(exchanges -> exchanges
-                                                .pathMatchers("/health", "/actuator/**").permitAll()
-                                                .pathMatchers("/oauth2/**", "/login/**").permitAll()
+        public SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
+                http
+                                .authorizeExchange(authz -> authz
+
                                                 .anyExchange().authenticated())
-                                .oauth2Login(oauth2 -> {
-                                })
                                 .oauth2ResourceServer(oauth2 -> oauth2
                                                 .jwt(jwt -> jwt.jwtAuthenticationConverter(
                                                                 jwtAuthenticationConverter())))
-                                .build();
+                                .oauth2Login(oauth2 -> oauth2
+                                                .authorizationRequestResolver(
+                                                                authorizationRequestResolver(
+                                                                                this.clientRegistrationRepository)));
+                return http.build();
+        }
+
+        private ServerOAuth2AuthorizationRequestResolver authorizationRequestResolver(
+                        ReactiveClientRegistrationRepository clientRegistrationRepository) {
+
+                DefaultServerOAuth2AuthorizationRequestResolver authorizationRequestResolver = new DefaultServerOAuth2AuthorizationRequestResolver(
+                                clientRegistrationRepository);
+                authorizationRequestResolver.setAuthorizationRequestCustomizer(
+                                authorizationRequestCustomizer());
+
+                return authorizationRequestResolver;
+        }
+
+        private Consumer<OAuth2AuthorizationRequest.Builder> authorizationRequestCustomizer() {
+                return customizer -> customizer
+                                .additionalParameters(params -> params.put("audience", audience));
+        }
+
+        @Bean
+        public ReactiveJwtAuthenticationConverterAdapter jwtAuthenticationConverter() {
+                JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
+                JwtGrantedAuthoritiesConverter defaultConverter = new JwtGrantedAuthoritiesConverter();
+
+                jwtConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+                        Collection authorities = defaultConverter.convert(jwt);
+
+                        // Extract roles from a custom claim in Auth0
+                        Collection customAuthorities = jwt.getClaimAsStringList("https://termiwums.com/roles")
+                                        .stream()
+                                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                                        .collect(Collectors.toList());
+
+                        authorities.addAll(customAuthorities);
+                        return authorities;
+                });
+
+                return new ReactiveJwtAuthenticationConverterAdapter(jwtConverter);
         }
 }

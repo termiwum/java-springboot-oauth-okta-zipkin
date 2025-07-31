@@ -2,35 +2,32 @@ package com.termiwum.orderservice.external.intercept;
 
 import java.io.IOException;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 
+import com.termiwum.orderservice.service.TokenService;
+
+@Configuration
 public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
-    private OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager;
+    private final TokenService tokenService;
 
-    public RestTemplateInterceptor(OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
-        this.oAuth2AuthorizedClientManager = oAuth2AuthorizedClientManager;
+    public RestTemplateInterceptor(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
             throws IOException {
+        String token = tokenService.extractToken(); // Extract token
 
-        request.getHeaders().add("Authorization",
-                "Bearer " + oAuth2AuthorizedClientManager
-                        .authorize(
-                                OAuth2AuthorizeRequest
-                                        .withClientRegistrationId("internal-client")
-                                        .principal("internal").build())
-                        .getAccessToken()
-                        .getTokenValue());
+        if (token != null) {
+            request.getHeaders().add("Authorization", "Bearer " + token);
+        }
 
         return execution.execute(request, body);
     }
-
 }
