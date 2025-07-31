@@ -1,4 +1,49 @@
-# Java SpringBoot OAuth Auth0 Zipkin - Microservices Architecture
+# Ja## 🚀 Inicio Rápido con Docker
+
+### Opción 1: Makefile (Recomendado)
+```bash
+# Ver todos los comandos disponibles
+make help
+
+# Construir y levantar todo el ecosistema
+make up-build
+
+# Ver estado de los servicios
+make status
+
+# Ver logs en tiempo real
+make logs
+
+# Detener todo
+make down
+```
+
+### Opción 2: Docker Compose
+```bash
+# Construir y levantar todos los servicios
+docker-compose up -d --build
+
+# Ver estado
+docker-compose ps
+
+# Ver logs
+docker-compose logs -f
+
+# Detener todo
+docker-compose down
+```
+
+### Opción 3: Automatización con Scripts
+```powershell
+# Windows PowerShell
+.\start-ecosystem.ps1
+
+# Linux/macOS Bash
+./start-ecosystem.sh
+```
+
+### Opción 4: Manual
+Seguir la guía completa en [DOCKER_SETUP.md](./DOCKER_SETUP.md) OAuth Auth0 Zipkin - Microservices Architecture
 
 Este workspace contiene una arquitectura completa de microservicios construida con Spring Boot, implementando autenticación OAuth2 con Auth0 y monitoreo distribuido con Zipkin.
 
@@ -212,7 +257,52 @@ Todos los servicios incluyen Spring Boot Actuator para:
 
 ### 🐳 Docker (Recomendado)
 
-#### Inicio Rápido Automatizado
+#### Comandos Makefile Útiles
+```bash
+# 📋 Ver todos los comandos disponibles
+make help
+
+# 🚀 Construir y levantar todo
+make up-build
+
+# 📊 Ver estado de servicios
+make status
+
+# 🏥 Verificar salud de servicios
+make health
+
+# 📋 Ver logs en tiempo real
+make logs
+
+# 🔄 Reiniciar un servicio específico
+make restart-service SERVICE=product-service
+
+# 🌐 Abrir URLs en el navegador
+make open-urls
+
+# 🛑 Detener todo
+make down
+
+# 🧹 Limpieza completa (CUIDADO: Borra datos)
+make clean
+```
+
+#### Docker Compose Directo
+```bash
+# Construir y levantar todos los servicios
+docker-compose up -d --build
+
+# Ver estado
+docker-compose ps
+
+# Ver logs
+docker-compose logs -f
+
+# Detener todo
+docker-compose down
+```
+
+#### Scripts de Automatización
 ```powershell
 # Windows PowerShell - Inicia todo el ecosistema
 .\start-ecosystem.ps1

@@ -1,0 +1,38 @@
+# Configuración personalizada para Makefile
+# Este archivo permite personalizar variables del entorno
+
+# Configuración de Docker Compose
+COMPOSE_PROJECT_NAME=microservices-ecosystem
+COMPOSE_FILE=docker-compose.yml
+ENV_FILE=.env
+
+# Configuración de red Docker
+NETWORK_NAME=microservices-network
+
+# Timeouts (en segundos)
+HEALTH_CHECK_TIMEOUT=60
+SERVICE_START_TIMEOUT=120
+
+# Configuración de logs
+LOG_TAIL_LINES=100
+
+# URLs base (para comandos de verificación)
+EUREKA_URL=http://localhost:8761
+GATEWAY_URL=http://localhost:9090
+CONFIG_SERVER_URL=http://localhost:9296
+ZIPKIN_URL=http://localhost:9411
+
+# Servicios principales (para comandos masivos)
+INFRASTRUCTURE_SERVICES=redis zipkin mysql-product mysql-payment mysql-order
+CORE_SERVICES=service-registry config-server
+BUSINESS_SERVICES=product-service payment-service order-service cloud-gateway
+
+# Configuración de limpieza
+CLEAN_IMAGES=true
+CLEAN_VOLUMES=true
+CLEAN_NETWORKS=true
+
+# Configuración de desarrollo
+DEV_MODE=false
+REBUILD_ON_CHANGE=false
+AUTO_RESTART=false
