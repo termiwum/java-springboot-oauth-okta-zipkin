@@ -46,11 +46,6 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -98,9 +93,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.tomakehurst</groupId>
-			<artifactId>wiremock-jre8</artifactId>
-			<version>2.33.2</version>
+			<groupId>org.wiremock</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>3.3.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -121,6 +116,13 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.30</version> <!-- compatible con Java 21 -->
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jakarta Servlet para compatibilidad con Spring Boot 3 -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
@@ -162,9 +164,10 @@
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.0</version>
 				<configuration>
 					<from>
-						<image>openjdk:11</image>
+						<image>openjdk:21-jdk-slim</image>
 					</from>
 					<to>
 						<image>${REPO_URL}/orderservice</image>

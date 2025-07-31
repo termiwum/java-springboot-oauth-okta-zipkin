@@ -2,7 +2,21 @@
 
 Este workspace contiene una arquitectura completa de microservicios construida con Spring Boot, implementando autenticación OAuth2 con Auth0 y monitoreo distribuido con Zipkin.
 
-## 📋 Resumen de Proyectos
+## � Inicio Rápido con Docker
+
+### Opción 1: Automatización Completa
+```powershell
+# Windows PowerShell
+.\start-ecosystem.ps1
+
+# Linux/macOS Bash
+./start-ecosystem.sh
+```
+
+### Opción 2: Manual
+Seguir la guía completa en [DOCKER_SETUP.md](./DOCKER_SETUP.md)
+
+## �📋 Resumen de Proyectos
 
 ### 🌐 Cloud Gateway (`cloud-gateway`)
 **Puerto:** 9090  
@@ -196,13 +210,44 @@ Todos los servicios incluyen Spring Boot Actuator para:
 
 ## 🛠️ Configuración y Ejecución
 
-### Prerrequisitos
+### 🐳 Docker (Recomendado)
+
+#### Inicio Rápido Automatizado
+```powershell
+# Windows PowerShell - Inicia todo el ecosistema
+.\start-ecosystem.ps1
+
+# Limpieza completa del entorno
+.\start-ecosystem.ps1 cleanup
+```
+
+```bash
+# Linux/macOS Bash - Inicia todo el ecosistema
+./start-ecosystem.sh
+
+# Limpieza completa del entorno  
+./start-ecosystem.sh cleanup
+```
+
+#### URLs de Acceso (Docker)
+| Servicio | URL | Descripción |
+|----------|-----|-------------|
+| **API Gateway** | http://localhost:9090 | Punto de entrada principal |
+| **Eureka Dashboard** | http://localhost:8761 | Registry de servicios |
+| **Config Server** | http://localhost:9296 | Servidor de configuración |
+| **Zipkin UI** | http://localhost:9411 | Trazas distribuidas |
+
+📋 **Para configuración manual completa, consulta:** [DOCKER_SETUP.md](./DOCKER_SETUP.md)
+
+### 💻 Ejecución Local (Alternativa)
+
+#### Prerrequisitos
 1. Java 21
 2. MySQL Server
 3. Zipkin Server (puerto 9411)
 4. Cuenta de Auth0 configurada
 
-### ⚙️ Configuración de Variables de Entorno
+#### ⚙️ Configuración de Variables de Entorno
 Antes de ejecutar los servicios, debes configurar las variables de entorno necesarias. 
 
 **📋 Consulta el archivo `ENVIRONMENT_SETUP.md` para instrucciones detalladas.**
@@ -212,17 +257,18 @@ Variables principales requeridas:
 - `AUTH0_ISSUER_URI` - URI del emisor de Auth0
 - `AUTH0_CLIENT_ID` y `AUTH0_CLIENT_SECRET` - Credenciales de la aplicación Auth0
 
-### Orden de inicio recomendado
+#### Orden de inicio recomendado
 1. **Config Server** (puerto 9296)
 2. **Service Registry** (puerto 8761)
 3. **Zipkin Server** (puerto 9411)
 4. **Microservicios** (Order, Payment, Product)
 5. **Cloud Gateway** (puerto 9090)
 
-### Base de datos
+#### Base de datos
 Crear las siguientes bases de datos en MySQL:
 - `order_db` - Para Order Service
-- Bases de datos adicionales para Payment y Product Services
+- `payment_db` - Para Payment Service
+- `product_db` - Para Product Service
 
 ## 📝 Notas Adicionales
 
