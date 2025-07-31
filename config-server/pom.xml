@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.termiwum</groupId>
-	<artifactId>config-server</artifactId>
+	<artifactId>ConfigServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-		<name>config-server</name>
+		<name>ConfigServer</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

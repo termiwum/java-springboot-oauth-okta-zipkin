@@ -9,9 +9,9 @@
 	</parent>
 
 	<groupId>com.termiwum</groupId>
-		<name>OrderService</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>OrderService</name>
+	<artifactId>OrderService</artifactId>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
