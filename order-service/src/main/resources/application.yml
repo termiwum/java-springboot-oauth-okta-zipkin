@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/order_db
-    username: admin
-    password: admin
+    username: {}
+    password: {}
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
@@ -26,8 +26,8 @@ spring:
             provider: okta
             authorization-grant-type: client_credentials
             scope: internal
-            client-id: 0oapqvhkafcaZpm4Z5d7
-            client-secret: u9-DfB9zDGMAZnlynGCEvzlzAFe4qKiXO8fTSAE852jWyis6lxnR0-jqtXHBdwfL
+            client-id: {}
+            client-secret: {}
         provider:
           okta:
             issuer-uri: https://dev-02439493.okta.com/oauth2/default
