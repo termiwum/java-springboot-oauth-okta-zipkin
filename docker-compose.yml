@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   microservices-network:
     driver: bridge
@@ -27,9 +25,10 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
+      interval: 15s
+      timeout: 5s
       retries: 3
+      start_period: 10s
 
   zipkin:
     image: openzipkin/zipkin
@@ -41,9 +40,10 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9411/health"]
-      interval: 30s
-      timeout: 10s
+      interval: 15s
+      timeout: 5s
       retries: 3
+      start_period: 20s
 
   # ================================
   # BASES DE DATOS MYSQL
@@ -64,11 +64,13 @@ services:
     volumes:
       - mysql-product-data:/var/lib/mysql
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-padmin"]
-      interval: 30s
-      timeout: 10s
+      interval: 20s
+      timeout: 5s
       retries: 5
+      start_period: 30s
 
   mysql-payment:
     image: mysql:8.0
@@ -85,11 +87,13 @@ services:
     volumes:
       - mysql-payment-data:/var/lib/mysql
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-padmin"]
-      interval: 30s
-      timeout: 10s
+      interval: 20s
+      timeout: 5s
       retries: 5
+      start_period: 30s
 
   mysql-order:
     image: mysql:8.0
@@ -106,11 +110,13 @@ services:
     volumes:
       - mysql-order-data:/var/lib/mysql
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-padmin"]
-      interval: 30s
-      timeout: 10s
+      interval: 20s
+      timeout: 5s
       retries: 5
+      start_period: 30s
 
   # ================================
   # MICROSERVICIOS CORE
@@ -127,10 +133,11 @@ services:
       - microservices-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8761/actuator/health"]
-      interval: 30s
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 20s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 45s
 
   config-server:
     build:
@@ -146,15 +153,16 @@ services:
       - microservices-network
     depends_on:
       service-registry:
-        condition: service_healthy
+        condition: service_started
       zipkin:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9296/actuator/health"]
-      interval: 30s
+      test: ["CMD", "curl", "-f", "http://localhost:9296/actuator/health"]
+      interval: 20s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 45s
 
   # ================================
   # SERVICIOS DE NEGOCIO
@@ -174,19 +182,20 @@ services:
       - microservices-network
     depends_on:
       service-registry:
-        condition: service_healthy
+        condition: service_started
       config-server:
-        condition: service_healthy
+        condition: service_started
       mysql-product:
         condition: service_healthy
       zipkin:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 60s
 
   payment-service:
     build:
@@ -202,19 +211,20 @@ services:
       - microservices-network
     depends_on:
       service-registry:
-        condition: service_healthy
+        condition: service_started
       config-server:
-        condition: service_healthy
+        condition: service_started
       mysql-payment:
         condition: service_healthy
       zipkin:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 60s
 
   order-service:
     build:
@@ -230,19 +240,20 @@ services:
       - microservices-network
     depends_on:
       service-registry:
-        condition: service_healthy
+        condition: service_started
       config-server:
-        condition: service_healthy
+        condition: service_started
       mysql-order:
         condition: service_healthy
       zipkin:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8082/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 60s
 
   # ================================
   # API GATEWAY
@@ -263,22 +274,23 @@ services:
       - microservices-network
     depends_on:
       service-registry:
-        condition: service_healthy
+        condition: service_started
       config-server:
-        condition: service_healthy
+        condition: service_started
       product-service:
-        condition: service_healthy
+        condition: service_started
       payment-service:
-        condition: service_healthy
+        condition: service_started
       order-service:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
       zipkin:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:9090/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 75s
