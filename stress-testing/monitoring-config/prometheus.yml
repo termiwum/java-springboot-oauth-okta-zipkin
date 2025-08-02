@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "spring-boot-microservices"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "host.docker.internal:8761" # service-registry
+          - "host.docker.internal:9296" # config-server
+          - "host.docker.internal:9090" # cloud-gateway
+          - "host.docker.internal:8080" # product-service
+          - "host.docker.internal:8081" # payment-service
+          - "host.docker.internal:8082" # order-service
+
+  - job_name: "k6-metrics"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["host.docker.internal:6565"] # K6 metrics endpoint
