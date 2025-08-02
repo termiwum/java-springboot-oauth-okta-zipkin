@@ -360,7 +360,37 @@ Crear las siguientes bases de datos en MySQL:
 - `payment_db` - Para Payment Service
 - `product_db` - Para Product Service
 
-## 📝 Notas Adicionales
+## � Stress Testing & Monitoreo
+
+Una vez que tengas el ecosistema funcionando, puedes ejecutar **pruebas de carga y monitoreo en tiempo real**:
+
+### 🚀 Inicio Rápido de Pruebas
+```bash
+# 1. Levantar el stack principal (requisito)
+docker-compose up -d
+
+# 2. Configurar y ejecutar stress testing
+cd stress-testing/
+# Seguir las instrucciones en el README de stress testing
+```
+
+### 📊 **¿Qué incluye el sistema de testing?**
+- **K6**: Pruebas de carga con autenticación OAuth2
+- **Grafana**: Dashboards en tiempo real  
+- **InfluxDB**: Almacenamiento de métricas de testing
+- **Prometheus**: Métricas de aplicaciones Spring Boot
+
+### 📚 **Documentación Completa**
+👉 **[Ver Guía Completa de Stress Testing](./stress-testing/README.md)**
+
+La guía incluye:
+- ✅ Setup paso a paso desde cero
+- ✅ Configuración segura de credenciales Auth0
+- ✅ Comandos listos para usar
+- ✅ Troubleshooting detallado
+- ✅ Dashboards pre-configurados
+
+## �📝 Notas Adicionales
 
 - Los microservicios utilizan configuración centralizada desde el Config Server
 - Implementación de Circuit Breaker para mayor resiliencia

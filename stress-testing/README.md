@@ -4,6 +4,29 @@
 
 Este módulo proporciona una solución completa de **stress testing** y **monitoreo** para el ecosistema de microservices Spring Boot. Combina **K6** para pruebas de carga con un stack híbrido de monitoreo usando **Prometheus**, **InfluxDB** y **Grafana**.
 
+> 📖 **Prerequisito**: Asegúrate de tener el stack principal funcionando primero.  
+> 👉 **[Ver Setup Principal del Proyecto](../README.md)**
+
+## � Índice de Navegación
+
+- [🚀 Setup Completo desde Cero](#-setup-completo-desde-cero)
+- [📊 Dashboards Disponibles](#-dashboards-disponibles)
+- [🔧 Comandos Útiles](#-comandos-útiles)
+- [🏗️ Arquitectura Detallada](#-arquitectura-detallada)
+- [🔒 Seguridad](#-seguridad)
+- [🔍 Troubleshooting](#-troubleshooting)
+
+### 📁 **Enlaces Rápidos**
+- **[Configuración de Autenticación K6](./k6-scripts/auth/README.md)**
+- **[Dashboard JSON](./gateway-auth-test-dashboard.json)**
+- **[Docker Compose Monitoring](./docker-compose-monitoring.yml)**
+
+## �🚀 Setup Completo desde Ceroress Testing & Monitoring Stack
+
+## 📋 Descripción
+
+Este módulo proporciona una solución completa de **stress testing** y **monitoreo** para el ecosistema de microservices Spring Boot. Combina **K6** para pruebas de carga con un stack híbrido de monitoreo usando **Prometheus**, **InfluxDB** y **Grafana**.
+
 ## � Setup Completo desde Cero
 
 ### 1. Prerequisitos

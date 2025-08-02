@@ -1,5 +1,8 @@
 # 🔐 Configuración de Autenticación K6
 
+> 📖 **Contexto**: Este archivo es parte del sistema de stress testing.  
+> 👉 **[Ver Documentación Completa](../../README.md)** | **[Proyecto Principal](../../../README.md)**
+
 ## 📋 Instrucciones de Configuración
 
 ### 1. Copiar el archivo de ejemplo
