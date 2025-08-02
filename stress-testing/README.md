@@ -4,50 +4,221 @@
 
 Este módulo proporciona una solución completa de **stress testing** y **monitoreo** para el ecosistema de microservices Spring Boot. Combina **K6** para pruebas de carga con un stack híbrido de monitoreo usando **Prometheus**, **InfluxDB** y **Grafana**.
 
-## 🔒 IMPORTANTE: Configuración de Credenciales
+## � Setup Completo desde Cero
 
-### ⚡ Setup Rápido de Auth0
-
+### 1. Prerequisitos
 ```bash
-# 1. Copiar archivo de ejemplo
-cp .env.example .env
+# Verificar que el stack principal esté corriendo
+docker-compose ps
 
-# 2. Editar .env con credenciales reales (NO subir a Git)
-AUTH0_DOMAIN=tu-dominio.auth0.com
-AUTH0_CLIENT_ID=tu_client_id
-AUTH0_CLIENT_SECRET=tu_client_secret
-AUTH0_AUDIENCE=https://tu-dominio.auth0.com/api/v2/
+# Los siguientes servicios deben estar UP:
+# - cloud-gateway (puerto 9090)
+# - service-registry (puerto 8761)
+# - config-server (puerto 8888)
 ```
 
-### 🚫 Seguridad
-- ✅ `.env` está en `.gitignore` (no se sube a Git)
-- ✅ Usar `.env.example` como template
-- ⚠️ **NUNCA** subas credenciales reales al repositorio
+### 2. Configurar Credenciales Auth0
 
-## 🏗️ Arquitectura
+#### 📋 Paso a paso:
+```bash
+# Ir al directorio de autenticación
+cd stress-testing/k6-scripts/auth/
+
+# Copiar archivo de ejemplo
+cp oauth2-auth.js.example oauth2-auth.js
+
+# Editar con tus credenciales reales
+# ⚠️ Reemplazar: YOUR_AUTH0_DOMAIN, YOUR_CLIENT_ID, YOUR_CLIENT_SECRET
+```
+
+#### ✏️ Configuración requerida:
+```javascript
+export const AUTH0_CONFIG = {
+    domain: 'tu-dominio.auth0.com',           // ej: dev-abc123.us.auth0.com
+    clientId: 'tu_client_id',                 // de tu Auth0 Application
+    clientSecret: 'tu_client_secret',         // de tu Auth0 Application  
+    audience: 'https://tu-dominio.auth0.com/api/v2/',
+    tokenEndpoint: 'https://tu-dominio.auth0.com/oauth/token',
+    gatewayTokenEndpoint: 'http://localhost:9090/token/client-credentials'
+};
+```
+
+### 3. Levantar Stack de Monitoreo
+```bash
+# Desde el directorio raíz del proyecto
+cd ../../../
+
+# Iniciar servicios de monitoreo
+docker-compose -f stress-testing/docker-compose-monitoring.yml up -d
+
+# Verificar que estén corriendo
+docker-compose -f stress-testing/docker-compose-monitoring.yml ps
+```
+
+#### 🔍 Servicios esperados:
+- **InfluxDB**: localhost:8086 (métricas K6)
+- **Prometheus**: localhost:9090 (métricas Spring Boot)  
+- **Grafana**: localhost:3000 (dashboards)
+
+### 4. Importar Dashboard de Grafana
+
+#### 🎨 Opción 1: Importación automática
+```bash
+# El dashboard se importa automáticamente al iniciar Grafana
+# Buscar: "Gateway Auth Test" en http://localhost:3000
+```
+
+#### 🔧 Opción 2: Importación manual
+```bash
+# 1. Ir a http://localhost:3000 (admin/admin)
+# 2. Dashboards > Import
+# 3. Upload stress-testing/gateway-auth-test-dashboard.json
+```
+
+### 5. Ejecutar Tests
+
+#### ⚡ Test básico (verificación):
+```bash
+docker run --rm -v ${PWD}/stress-testing:/scripts --network host \
+  grafana/k6:latest run /scripts/k6-scripts/gateway-auth-test.js \
+  --duration 30s --vus 2
+```
+
+#### 🔥 Test de stress (producción):
+```bash
+docker run --rm -v ${PWD}/stress-testing:/scripts --network host \
+  grafana/k6:latest run /scripts/k6-scripts/gateway-auth-test.js \
+  --duration 5m --vus 10
+```
+
+#### 📊 Test con monitoreo en tiempo real:
+```bash
+# Ejecutar test en background
+docker run --rm -d -v ${PWD}/stress-testing:/scripts --network host \
+  grafana/k6:latest run /scripts/k6-scripts/gateway-auth-test.js \
+  --duration 2m --vus 5
+
+# Ir a Grafana: http://localhost:3000/d/gateway-auth-test/gateway-auth-test
+# Refresh automático cada 5 segundos
+```
+
+## 📊 Dashboards Disponibles
+
+### 🎯 Gateway Auth Test Dashboard
+- **URL**: http://localhost:3000/d/gateway-auth-test/gateway-auth-test
+- **Métricas**:
+  - Request Rate (peticiones/segundo)
+  - Response Time (P95, P90, promedio)
+  - Success Rate (% éxito)
+  - Auth Performance (tokens/segundo)
+  - Test Summary (iteraciones completadas)
+
+## 🔧 Comandos Útiles
+
+### 🩺 Verificación de servicios:
+```bash
+# Ver logs de K6
+docker-compose -f stress-testing/docker-compose-monitoring.yml logs k6
+
+# Ver logs de InfluxDB
+docker-compose -f stress-testing/docker-compose-monitoring.yml logs influxdb
+
+# Ver logs de Grafana
+docker-compose -f stress-testing/docker-compose-monitoring.yml logs grafana
+```
+
+### 🔄 Reiniciar servicios:
+```bash
+# Reiniciar solo monitoreo
+docker-compose -f stress-testing/docker-compose-monitoring.yml restart
+
+# Limpiar datos de InfluxDB (resetear métricas)
+docker-compose -f stress-testing/docker-compose-monitoring.yml down -v
+docker-compose -f stress-testing/docker-compose-monitoring.yml up -d
+```
+
+### 🧹 Limpieza completa:
+```bash
+# Parar y eliminar todo
+docker-compose -f stress-testing/docker-compose-monitoring.yml down -v
+docker system prune -f
+```
+
+## 🏗️ Arquitectura Detallada
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   K6 Testing    │───▶│    InfluxDB     │───▶│     Grafana     │
-└─────────────────┘    └─────────────────┘    │   (Dashboards)  │
-                                              │                 │
-┌─────────────────┐    ┌─────────────────┐    │                 │
-│ Spring Boot Apps│───▶│   Prometheus    │───▶│                 │
+│                 │    │   (port 8086)   │    │   (port 3000)   │
+│ gateway-auth-   │    │                 │    │   Dashboards    │
+│ test.js         │    │ k6_database     │    │   - Auth Perf   │
+└─────────────────┘    └─────────────────┘    │   - Req Rate    │
+                                              │   - Response    │
+┌─────────────────┐    ┌─────────────────┐    │     Time        │
+│ Spring Boot Apps│───▶│   Prometheus    │───▶│   - Success %   │
+│ - Gateway :9090 │    │   (port 9091)   │    │                 │
+│ - Services      │    │                 │    │                 │
+│ /actuator/*     │    │ metrics scraping│    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-### 🎯 Stack Híbrido de Monitoreo
+## 🔒 Seguridad
 
-- **InfluxDB**: Almacena métricas de tiempo real de K6 (load testing)
-- **Prometheus**: Recolecta métricas de aplicaciones Spring Boot (actuator)
-- **Grafana**: Dashboards unificados correlacionando ambas fuentes de datos
+- ✅ `oauth2-auth.js` está en `.gitignore` (no se sube a Git)
+- ✅ Solo archivos `.example` se incluyen en el repositorio
+- ✅ Credenciales reales permanecen solo en tu máquina local
+- ⚠️ **NUNCA** subas archivos con credenciales reales
 
-## 🚀 Inicio Rápido
+## 🔍 Troubleshooting
 
-### 1. Prerequisitos
+### ❌ Error: "Authentication failed"
+```bash
+# Verificar credenciales en oauth2-auth.js
+# Verificar que el gateway esté corriendo en puerto 9090
+curl http://localhost:9090/actuator/health
+```
 
-```powershell
+### ❌ Error: "No data in dashboard"
+```bash
+# Verificar InfluxDB
+docker-compose -f stress-testing/docker-compose-monitoring.yml logs influxdb
+
+# Verificar conectividad
+curl http://localhost:8086/ping
+```
+
+### ❌ Error: "Cannot connect to gateway"
+```bash
 # Verificar que el stack principal esté corriendo
+docker-compose ps
+
+# Verificar endpoint específico
+curl http://localhost:9090/token/client-credentials -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"clientId":"test","clientSecret":"test","audience":"test","grantType":"client_credentials"}'
+```
+
+## 📚 Referencias
+
+- [Documentación K6](https://k6.io/docs/)
+- [InfluxDB + K6](https://k6.io/docs/results-visualization/influxdb-+-grafana/)
+- [Grafana Dashboards](https://grafana.com/docs/grafana/latest/dashboards/)
+- [Auth0 Client Credentials](https://auth0.com/docs/flows/client-credentials-flow)
+
+---
+
+## 🎯 Resultado Esperado
+
+Después de seguir esta guía tendrás:
+
+✅ **Sistema de stress testing funcional** con K6
+✅ **Monitoreo en tiempo real** con Grafana
+✅ **Métricas de autenticación OAuth2** 
+✅ **Dashboard visual** con métricas clave
+✅ **Configuración segura** de credenciales
+✅ **Documentación completa** para el equipo
+
+**🚀 Ready para production testing!** 🎉
 docker-compose ps
 
 # Si no está iniciado:
