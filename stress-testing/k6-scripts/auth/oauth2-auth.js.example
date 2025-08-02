@@ -3,7 +3,7 @@ import { check } from 'k6';
 import exec from 'k6/execution';
 
 // Configuración Auth0 para stress testing
-// IMPORTANTE: Reemplaza con tus credenciales reales antes de ejecutar tests
+// IMPORTANTE: Copia este archivo como oauth2-auth.js y reemplaza con tus credenciales reales
 export const AUTH0_CONFIG = {
     domain: 'YOUR_AUTH0_DOMAIN.auth0.com',
     clientId: 'YOUR_CLIENT_ID',

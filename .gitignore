@@ -30,3 +30,9 @@
 
 # Permitir configuración compartida no sensible
 !spring-boot-config/application.yml
+
+# Archivos K6 con credenciales reales (stress testing)
+stress-testing/k6-scripts/auth/oauth2-auth.js
+
+# EXCEPCIONES: Permitir archivos de ejemplo/plantilla K6
+!stress-testing/k6-scripts/auth/oauth2-auth.js.example
