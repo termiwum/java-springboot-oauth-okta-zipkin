@@ -1,4 +1,10 @@
-# Ja## 🚀 Inicio Rápido con Docker
+# Java Spring Boot OAuth Auth0 Zipkin - Microservices Architecture
+
+**🏗️ Desarrollado por:** [termiwum](https://github.com/termiwum)
+
+Este workspace contiene una arquitectura completa de microservicios construida con Spring Boot, implementando autenticación OAuth2 con Auth0 y monitoreo distribuido con Zipkin.
+
+## 🚀 Inicio Rápido con Docker
 
 ### Opción 1: Makefile (Recomendado)
 ```bash
