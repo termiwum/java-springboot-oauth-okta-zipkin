@@ -270,6 +270,9 @@ services:
       EUREKA_HOST: service-registry
       CONFIG_SERVER_HOST: config-server
       ZIPKIN_HOST: zipkin
+      SPRING_PROFILES_ACTIVE: stress-testing
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     networks:
       - microservices-network
     depends_on:

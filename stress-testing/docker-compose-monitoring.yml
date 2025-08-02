@@ -1,0 +1,117 @@
+version: '3.8'
+
+networks:
+  monitoring:
+    driver: bridge
+  microservices:
+    external: true
+    name: microservices-ecosystem_microservices-network
+
+services:
+  # InfluxDB para métricas de K6
+  influxdb:
+    image: influxdb:2.7-alpine
+    container_name: influxdb
+    ports:
+      - "8087:8086"  # Cambiado de 8086 a 8087 para evitar conflicto
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpass123
+      - DOCKER_INFLUXDB_INIT_ORG=stress-testing
+      - DOCKER_INFLUXDB_INIT_BUCKET=k6-metrics
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=stress-testing-token-2025
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    networks:
+      - monitoring
+      - microservices  # Conectar también a la red de microservicios
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]  # Puerto interno es 8086
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Prometheus para métricas de Spring Boot
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: prometheus
+    ports:
+      - "9092:9090"  # Cambiado de 9090 a 9092 para evitar conflicto con cloud-gateway
+    volumes:
+      - ./monitoring-config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    networks:
+      - monitoring
+      - microservices
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]  # Puerto interno sigue siendo 9090
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Grafana para dashboards unificados
+  grafana:
+    image: grafana/grafana:10.1.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring-config/grafana:/etc/grafana/provisioning
+    networks:
+      - monitoring
+      - microservices  # Conectar también a la red de microservicios
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # K6 para load testing
+  k6:
+    image: grafana/k6:0.46.0
+    container_name: k6-runner
+    networks:
+      - monitoring
+      - microservices
+    volumes:
+      - ./k6-scripts:/scripts
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/stress-testing-token-2025  # Puerto interno sigue siendo 8086
+      - K6_INFLUXDB_ORGANIZATION=stress-testing
+      - K6_INFLUXDB_BUCKET=k6-metrics
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    profiles:
+      - testing
+    command: ["sleep", "infinity"]
+
+volumes:
+  influxdb_data:
+  influxdb_config:
+  prometheus_data:
+  grafana_data:
