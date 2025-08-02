@@ -408,3 +408,369 @@ La guía incluye:
 ## 🔧 Configuración de Desarrollo
 
 Todas las configuraciones específicas se encuentran en el directorio `spring-boot-config` y son distribuidas automáticamente por el Config Server a todos los microservicios registrados.
+
+---
+
+# 🔥 STRESS TESTING & MONITOREO AVANZADO
+
+## 📋 Resumen de lo Desarrollado en Nuestra Rama
+
+En la rama `feature/stress-testing-k6-monitoring` hemos desarrollado una **suite completa de stress testing y monitoreo** que transforma este ecosistema de microservicios en una plataforma de testing robusta y profesional.
+
+### 🎯 ¿Qué Incluye Nuestro Sistema de Testing?
+
+- **🧪 K6 Testing Suite**: Pruebas de carga con autenticación OAuth2 real
+- **📊 Grafana Dashboards**: 8 dashboards especializados con métricas en tiempo real
+- **💾 InfluxDB**: Base de datos de series temporales para métricas
+- **🐳 Docker Stack**: Stack completo de monitoreo containerizado
+- **⚡ Scripts de Automatización**: Inicio completo en 130 segundos con dashboards automáticos
+
+## 🚀 Configuración desde Cero - Paso a Paso Completo
+
+### Paso 1: Prerequisitos del Sistema
+```powershell
+# Verificar Docker y Docker Compose
+docker --version                 # Versión mínima: 20.x
+docker-compose --version         # Versión mínima: 2.x
+
+# Verificar PowerShell (Windows)
+$PSVersionTable.PSVersion        # Versión mínima: 5.x
+
+# Verificar Git
+git --version
+```
+
+### Paso 2: Clonar y Configurar el Repositorio
+```powershell
+# Clonar el repositorio
+git clone https://github.com/termiwum/java-springboot-oauth-okta-zipkin.git
+cd java-springboot-oauth-okta-zipkin
+
+# Cambiar a la rama de stress testing
+git checkout feature/stress-testing-k6-monitoring
+
+# Verificar que estamos en la rama correcta
+git branch
+```
+
+### Paso 3: Configuración de Autenticación Auth0 (CRÍTICO)
+```powershell
+# Navegar al directorio de stress testing
+cd stress-testing
+
+# Copiar template de configuración OAuth2
+copy oauth2-auth.js.example oauth2-auth.js
+
+# Editar el archivo oauth2-auth.js con tus credenciales Auth0
+notepad oauth2-auth.js
+```
+
+**Configurar en `oauth2-auth.js`:**
+```javascript
+export const auth0Config = {
+  domain: 'tu-domain.auth0.com',
+  clientId: 'tu-client-id',
+  clientSecret: 'tu-client-secret',
+  audience: 'tu-audience',
+  scope: 'openid profile email Customer Admin'
+};
+```
+
+### Paso 4: Arranque del Ecosistema Completo
+```powershell
+# Volver al directorio raíz
+cd ..
+
+# Arranque optimizado con dashboards automáticos
+.\quick-start.ps1
+```
+
+**⏱️ El script ejecutará automáticamente:**
+1. ✅ Build paralelo de todas las imágenes Docker (~30s)
+2. ✅ Inicio secuencial de infraestructura (MySQL, Redis, Zipkin) (~20s)
+3. ✅ Registro de servicios en Eureka (~15s)
+4. ✅ Configuración centralizada via Config Server (~10s)
+5. ✅ Levantado del API Gateway (~20s)
+6. ✅ Stack de monitoreo (Grafana + InfluxDB) (~30s)
+7. ✅ Importación automática de 8 dashboards (~5s)
+8. ✅ Verificación de salud de todos los servicios
+
+**⏱️ Tiempo total de despliegue:** ~130 segundos
+
+### Paso 5: Verificación del Ecosistema
+```powershell
+# Ver estado de todos los contenedores
+docker-compose ps
+
+# Debe mostrar todos los servicios como "Up" y "healthy"
+```
+
+**URLs de Verificación:**
+| Servicio | URL | Credenciales | Verificación |
+|----------|-----|--------------|--------------|
+| **API Gateway** | http://localhost:9090 | - | Debe responder JSON |
+| **Eureka Dashboard** | http://localhost:8761 | - | Ver 6 servicios registrados |
+| **Zipkin Tracing** | http://localhost:9411 | - | Interface de trazas |
+| **Grafana** | http://localhost:3000 | admin/grafana123 | 8 dashboards importados |
+| **InfluxDB** | http://localhost:8087 | - | Interface web |
+
+### Paso 6: Poblar Bases de Datos para Testing
+```powershell
+cd stress-testing
+
+# Poblar con datos de testing
+.\populate-databases.ps1
+
+# Verificar que los datos se insertaron correctamente
+.\verify-databases.ps1
+```
+
+### Paso 7: Ejecutar Tests de Stress
+```powershell
+# Test individual de cada servicio
+.\test-services.ps1 -Service product
+.\test-services.ps1 -Service payment  
+.\test-services.ps1 -Service order
+
+# Test global del ecosistema (recomendado)
+.\test-services.ps1 -Service ecosystem
+
+# Tests automatizados con reportes
+.\run-tests-simple.ps1
+```
+
+## 📊 Dashboards Disponibles (Auto-importados)
+
+### Dashboards Especializados por Servicio
+
+| Dashboard | Propósito | Métricas Clave | Panel Principal |
+|-----------|-----------|----------------|----------------|
+| **Ecosystem Global** | Vista general del sistema | Disponibilidad, error rates, response times | Sistema completo |
+| **Product Service** | Monitoreo del catálogo | CRUD operations, inventory tracking | Gestión de productos |
+| **Payment Service** | Transacciones financieras | Process/query ratio, success rates | Procesamiento de pagos |
+| **Order Place** | Flujo de pedidos | Order→Product→Payment chain | Creación de pedidos |
+| **Order Details** | Consultas de pedidos | Parallel queries performance | Consulta de detalles |
+
+### Dashboards de Monitoreo K6
+
+| Dashboard | Propósito | Métricas Clave |
+|-----------|-----------|----------------|
+| **K6 Auto** | Métricas de stress testing | Load test performance, thresholds |
+| **K6 Simple** | Testing básico | Simple load metrics |
+| **K6 Prometheus** | Métricas avanzadas | Detailed performance analytics |
+
+## 🧪 Suite de Tests Disponibles
+
+### Tests Individuales por Servicio
+
+```powershell
+# Test del Product Service
+.\test-services.ps1 -Service product
+# - 70% GET products, 30% CREATE products
+# - Validación de inventory tracking
+# - Métricas de CRUD operations
+
+# Test del Payment Service  
+.\test-services.ps1 -Service payment
+# - 70% process payments, 30% get payment details
+# - Validación de transacciones
+# - Métricas de success rates
+
+# Test del Order Service
+.\test-services.ps1 -Service order
+# - Flujo completo Order → Product → Payment
+# - Validación de cadena de servicios
+# - Métricas de business flow
+```
+
+### Test Global del Ecosistema
+
+```powershell
+# Test comprehensivo del ecosistema completo
+.\test-services.ps1 -Service ecosystem
+# - Combina todos los flujos de negocio
+# - 40% orders, 30% products, 30% payments
+# - Validación de disponibilidad del sistema
+# - Métricas globales de rendimiento
+```
+
+## 📈 Monitoreo en Tiempo Real
+
+### Métricas Clave Monitoreadas
+
+#### Response Times
+- **P50 (Mediana)**: Tiempo de respuesta del 50% de requests
+- **P90**: 90% de requests responden en este tiempo o menos
+- **P95**: 95% de requests responden en este tiempo o menos
+- **P99**: 99% de requests responden en este tiempo o menos
+
+#### Business Metrics
+- **Order Success Rate**: % de órdenes completadas exitosamente
+- **Payment Processing Time**: Tiempo promedio de procesamiento de pagos
+- **Product Availability**: % de productos disponibles en inventario
+- **Service Chain Duration**: Tiempo total Order→Product→Payment
+
+#### System Metrics
+- **Error Rates**: Por servicio y global
+- **Throughput**: Requests por segundo por servicio
+- **Availability**: Uptime de cada microservicio
+- **Resource Usage**: CPU, memoria, network por contenedor
+
+### Alerting y Umbrales Configurados
+
+```javascript
+// Umbrales configurados en K6
+checks: {
+  'http_req_duration': ['p(95)<2000'],  // 95% < 2s
+  'http_req_failed': ['rate<0.05'],     // Error rate < 5%
+  'ecosystem_availability': ['rate>0.99'] // Availability > 99%
+}
+```
+
+## 🛡️ Seguridad en Testing
+
+### Autenticación OAuth2 Real
+- **Flujo OAuth2**: Client Credentials Grant
+- **Tokens JWT**: Validación real con Auth0
+- **Roles y Scopes**: Customer, Admin, internal
+- **Rate Limiting**: Validación de límites del API Gateway
+
+### Gestión Segura de Credenciales
+```powershell
+# Las credenciales se manejan via archivo local
+stress-testing/oauth2-auth.js  # No versionado en Git
+
+# Variables de entorno para CI/CD
+AUTH0_DOMAIN=tu-domain.auth0.com
+AUTH0_CLIENT_ID=tu-client-id
+AUTH0_CLIENT_SECRET=tu-client-secret
+```
+
+## 🔄 Scripts de Gestión del Ecosistema
+
+### Scripts Principales Desarrollados
+
+| Script | Función | Características | Tiempo Ejecución |
+|--------|---------|----------------|------------------|
+| `quick-start.ps1` | Arranque completo optimizado | Build paralelo, importación automática dashboards | ~130s |
+| `stop-ecosystem.ps1` | Parada limpia del ecosistema | Limpieza opcional de volúmenes | ~10s |
+| `test-services.ps1` | Tests individuales de servicios | Por servicio o ecosistema completo | ~60s |
+| `populate-databases.ps1` | Datos de testing | Productos, usuarios, configuración | ~5s |
+| `import-dashboards-fixed.ps1` | Re-importar dashboards | 8 dashboards con validación | ~10s |
+
+### Ejemplos de Uso
+
+```powershell
+# Arranque completo del ecosistema
+.\quick-start.ps1
+
+# Verificación de estado
+docker-compose ps
+
+# Ejecutar test del ecosistema completo  
+cd stress-testing
+.\test-services.ps1 -Service ecosystem
+
+# Ver resultados en Grafana
+# http://localhost:3000 (admin/grafana123)
+
+# Parar todo el ecosistema con limpieza completa
+cd ..
+.\stop-ecosystem.ps1 -Force -Volumes
+```
+
+## 🔄 Automatización de CI/CD
+
+### Workflow de Testing Automatizado
+
+```powershell
+# 1. Limpieza completa del entorno
+.\stop-ecosystem.ps1 -Force -Volumes
+
+# 2. Arranque completo automatizado
+.\quick-start.ps1
+
+# 3. Validación automática post-deploy
+cd stress-testing
+.\verify-databases.ps1
+.\populate-databases.ps1
+
+# 4. Ejecución de tests
+.\test-services.ps1 -Service ecosystem
+
+# 5. Reporte de resultados (en dashboards Grafana)
+```
+
+### Integración con CI/CD
+
+El ecosistema está preparado para integrarse con pipelines de CI/CD:
+- **Docker Compose**: Toda la infraestructura en contenedores
+- **Health Checks**: Validación automática de servicios
+- **Exit Codes**: Scripts retornan códigos de error apropiados
+- **Métricas**: Reportes en formato JSON para análisis automático
+
+## 🎯 Resultados Esperados Después del Setup
+
+Después de completar todos los pasos deberías tener:
+
+### ✅ Servicios Funcionando (8 Contenedores)
+- Spring Boot Microservices: cloud-gateway, order-service, payment-service, product-service
+- Infrastructure: service-registry, config-server, zipkin, mysql, redis
+- Monitoring Stack: grafana, influxdb
+
+### ✅ Dashboards Importados (8 Dashboards)
+- Ecosystem Global Dashboard
+- Product Service Dashboard  
+- Payment Service Dashboard
+- Order Place Dashboard
+- Order Details Dashboard
+- K6 Auto Dashboard
+- K6 Simple Dashboard
+- K6 Prometheus Dashboard
+
+### ✅ Tests de Stress Listos
+- Tests individuales por servicio
+- Test global del ecosistema
+- Autenticación OAuth2 funcionando
+- Métricas en tiempo real
+
+### ✅ Monitoreo Completo
+- Trazabilidad distribuida con Zipkin
+- Métricas de negocio en Grafana
+- Alerting configurado
+- Resource monitoring
+
+## 📚 Documentación Detallada Adicional
+
+- **[Guía Completa de Stress Testing](./stress-testing/TESTING_GUIDE.md)** - Setup detallado y troubleshooting
+- **[Configuración de Monitoreo](./stress-testing/README.md)** - Dashboards y métricas
+- **[Setup de Docker](./DOCKER_SETUP.md)** - Configuración de contenedores
+- **[Variables de Entorno](./ENVIRONMENT_SETUP.md)** - Configuración de credenciales
+
+## 🚨 Troubleshooting Común
+
+### Problema: Dashboards no se importan automáticamente
+```powershell
+# Solución: Re-importar manualmente
+cd stress-testing
+.\import-dashboards-fixed.ps1
+```
+
+### Problema: Tests fallan por autenticación
+```powershell
+# Verificar configuración OAuth2
+notepad stress-testing\oauth2-auth.js
+# Asegurar credenciales Auth0 correctas
+```
+
+### Problema: Servicios no se registran en Eureka
+```powershell
+# Verificar orden de inicio
+.\stop-ecosystem.ps1 -Force
+.\quick-start.ps1
+# El script maneja el orden correcto automáticamente
+```
+
+---
+
+Este ecosistema representa una implementación completa y profesional de testing de microservicios con monitoreo en tiempo real, listo para entornos de producción y perfectamente integrado con metodologías DevOps modernas.
