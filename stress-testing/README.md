@@ -1,64 +1,226 @@
-# 🔥 Stress Testing & Monitoring Stack
+# 🔥 Comprehensive Microservices Testing Suite
 
 ## 📋 Descripción
 
-Este módulo proporciona una solución completa de **stress testing** y **monitoreo** para el ecosistema de microservices Spring Boot. Combina **K6** para pruebas de carga con un stack híbrido de monitoreo usando **Prometheus**, **InfluxDB** y **Grafana**.
+Este módulo proporciona una **suite completa de testing y monitoreo** para el ecosistema de microservices Spring Boot con integración OAuth2. Incluye pruebas específicas para cada servicio, dashboards individualizados y monitoreo en tiempo real.
 
 > 📖 **Prerequisito**: Asegúrate de tener el stack principal funcionando primero.  
-> 👉 **[Ver Setup Principal del Proyecto](../README.md)**
+> 👉 **[Ver Setup Principal del Proyecto](../README.md)**  
+> 📚 **[Guía Detallada de Testing](./TESTING_GUIDE.md)**
 
-## � Índice de Navegación
+## 🎯 Índice de Navegación
 
-- [🚀 Setup Completo desde Cero](#-setup-completo-desde-cero)
-- [📊 Dashboards Disponibles](#-dashboards-disponibles)
-- [🔧 Comandos Útiles](#-comandos-útiles)
-- [🏗️ Arquitectura Detallada](#-arquitectura-detallada)
-- [🔒 Seguridad](#-seguridad)
-- [🔍 Troubleshooting](#-troubleshooting)
+- [🧪 Tests por Servicio](#-tests-por-servicio)
+- [📊 Dashboards Individuales](#-dashboards-individuales)
+- [� Ejecución Automatizada](#-ejecución-automatizada)
+- [📈 Monitoreo en Tiempo Real](#-monitoreo-en-tiempo-real)
+- [� Setup y Configuración](#-setup-y-configuración)
+- [� Seguridad OAuth2](#-seguridad-oauth2)
 
 ### 📁 **Enlaces Rápidos**
-- **[Configuración de Autenticación K6](./k6-scripts/auth/README.md)**
-- **[Dashboard JSON](./gateway-auth-test-dashboard.json)**
-- **[Docker Compose Monitoring](./docker-compose-monitoring.yml)**
+- **[📚 Guía Completa de Testing](./TESTING_GUIDE.md)**
+- **[🔑 Configuración Auth0](./oauth2-auth.js.example)**
+- **[🐳 Docker Monitoring Stack](./docker-compose-monitoring.yml)**
+- **[� Dashboards Collection](./dashboards/)**
 
-## �🚀 Setup Completo desde Ceroress Testing & Monitoring Stack
+## 🧪 Tests por Servicio
 
-## 📋 Descripción
+### 🌐 Ecosystem Global Test
+- **`ecosystem-global-test.js`** - Test comprehensivo del ecosistema
+  - Múltiples escenarios de negocio integrados
+  - Verificación de disponibilidad de servicios
+  - Métricas globales del sistema
+  - Simulación de carga realista
+  
+### 📋 Order Service Tests
+- **`order-place-test.js`** - Test de creación de pedidos
+  - Flujo completo: Order → Product → Payment
+  - Métricas de cadena de servicios
+  - Validación de datos de respuesta
+  
+- **`order-details-test.js`** - Test de consulta de detalles
+  - Consulta paralela: Order → Product + Payment
+  - Métricas de tiempo de respuesta
+  - Integridad de datos cross-service
 
-Este módulo proporciona una solución completa de **stress testing** y **monitoreo** para el ecosistema de microservices Spring Boot. Combina **K6** para pruebas de carga con un stack híbrido de monitoreo usando **Prometheus**, **InfluxDB** y **Grafana**.
+### 💳 Payment Service Tests
+- **`payment-service-test.js`** - Test completo de pagos
+  - 70% procesamiento de pagos, 30% consultas
+  - Métricas de procesamiento y consulta
+  - Validación de transacciones
+## 📊 Dashboards Individuales
 
-## � Setup Completo desde Cero
+Cada servicio cuenta con su propio dashboard personalizado en Grafana:
+
+### 🌐 Ecosystem Global Dashboard
+- **Archivo**: `dashboards/ecosystem-global-dashboard.json`
+- **Características**:
+  - Vista general del ecosistema completo
+  - Disponibilidad del sistema (%)
+  - Error rate global
+  - Comparación de response times por servicio
+  - Distribución de requests por escenario
+
+### 📋 Order Service Dashboards
+
+#### Order Place Dashboard
+- **Archivo**: `dashboards/order-place-dashboard.json`
+- **Métricas**: Request rate, response times (avg/P90/P95), error rate, successful orders
+- **Visualización**: Cadena de servicios Order→Product→Payment
+
+#### Order Details Dashboard
+- **Archivo**: `dashboards/order-details-dashboard.json`
+- **Métricas**: Detail requests, response time percentiles, service chain duration
+- **Visualización**: Consultas paralelas Order→Product+Payment
+
+### 💳 Payment Service Dashboard
+- **Archivo**: `dashboards/payment-service-dashboard.json`
+- **Métricas**: Process/get operations, dual tracking, success rates
+- **Visualización**: Pie chart de distribución de operaciones
+
+### 📦 Product Service Dashboard
+- **Archivo**: `dashboards/product-service-dashboard.json`
+- **Métricas**: Get/create/update operations, response times, error tracking
+- **Visualización**: CRUD operation distribution y inventory management
+
+## 🚀 Ejecución Automatizada
+
+### Windows (PowerShell)
+```powershell
+# Ejecutar todos los tests secuencialmente
+.\run-automated-tests.ps1 -Mode Sequential
+
+# Ejecutar tests en paralelo
+.\run-automated-tests.ps1 -Mode Parallel
+
+# Ejecutar solo test global del ecosistema
+.\run-automated-tests.ps1 -Mode Global
+
+# Ejecutar test específico
+.\run-automated-tests.ps1 -Mode Individual -TestName order-place-test.js
+```
+
+### Linux/macOS (Bash)
+```bash
+# Hacer el script ejecutable
+chmod +x run-automated-tests.sh
+
+# Ejecutar todos los tests secuencialmente
+./run-automated-tests.sh sequential
+
+# Ejecutar tests en paralelo
+./run-automated-tests.sh parallel
+
+# Ejecutar solo test global
+./run-automated-tests.sh global
+
+# Ejecutar test específico
+./run-automated-tests.sh individual payment-service-test.js
+```
+
+## 📈 Monitoreo en Tiempo Real
+
+### Acceso a Dashboards
+```bash
+# Grafana UI
+http://localhost:3000
+# Credenciales: admin/admin
+
+# InfluxDB UI (opcional)
+http://localhost:8086
+```
+
+### Importar Dashboards
+1. Ir a **Grafana** → **Dashboards** → **Import**
+2. Copiar contenido de archivos JSON de `dashboards/`
+3. Configurar datasource como **InfluxDB** (`http://172.17.0.1:8086`)
+
+### Métricas Clave
+- **Response Time**: P90 < 2000ms, P95 < 3000ms
+- **Error Rate**: < 1% bajo carga normal
+- **Availability**: > 99% uptime
+- **Throughput**: Requests/second por servicio
+
+## � Setup y Configuración
 
 ### 1. Prerequisitos
 ```bash
-# Verificar que el stack principal esté corriendo
+# Verificar stack principal
 docker-compose ps
 
-# Los siguientes servicios deben estar UP:
+# Verificar K6 instalado
+k6 version
+
+# Servicios requeridos UP:
 # - cloud-gateway (puerto 9090)
-# - service-registry (puerto 8761)
+# - service-registry (puerto 8761)  
 # - config-server (puerto 8888)
 ```
 
-### 2. Configurar Credenciales Auth0
-
-#### 📋 Paso a paso:
+### 2. Configurar Auth0
 ```bash
-# Ir al directorio de autenticación
-cd stress-testing/k6-scripts/auth/
-
-# Copiar archivo de ejemplo
+# Copiar template de configuración
 cp oauth2-auth.js.example oauth2-auth.js
 
-# Editar con tus credenciales reales
-# ⚠️ Reemplazar: YOUR_AUTH0_DOMAIN, YOUR_CLIENT_ID, YOUR_CLIENT_SECRET
+# Editar con credenciales reales
+# ⚠️ Archivo protegido por .gitignore
 ```
 
-#### ✏️ Configuración requerida:
+### 3. Iniciar Stack de Monitoreo
+```bash
+# Arrancar InfluxDB y Grafana
+docker-compose -f docker-compose-monitoring.yml up -d
+
+# Verificar servicios
+docker ps | grep -E "(influxdb|grafana)"
+```
+
+## 🔒 Seguridad OAuth2
+
+### Integración Auth0
+- **Client Credentials Flow** para autenticación de servicios
+- **Token caching** para optimización de performance  
+- **Automatic refresh** de tokens expirados
+- **Secure storage** con .gitignore protection
+
+### Configuración de Seguridad
 ```javascript
+// oauth2-auth.js
 export const AUTH0_CONFIG = {
-    domain: 'tu-dominio.auth0.com',           // ej: dev-abc123.us.auth0.com
-    clientId: 'tu_client_id',                 // de tu Auth0 Application
+    domain: 'tu-dominio.auth0.com',
+    clientId: 'tu_client_id',
+    clientSecret: 'tu_client_secret',
+    audience: 'https://api.microservices.local'
+};
+```
+
+### Roles y Permisos
+- **Admin**: Acceso completo a todos los endpoints
+- **Customer**: Acceso limitado a operaciones de negocio
+- **Service**: Comunicación inter-servicios
+
+---
+
+## 🎯 Resultados Esperados
+
+### ✅ Criterios de Éxito
+- **Sistema Availability**: > 99% uptime durante testing
+- **Response Performance**: P95 < 2000ms  
+- **Error Tolerance**: < 5% error rate bajo stress
+- **Scalability**: Degradación lineal bajo carga
+- **Security**: Integración OAuth2 exitosa
+
+### 📊 Métricas de Referencia
+| Métrica | Normal Load | Stress Test | Límite Crítico |
+|---------|-------------|-------------|-----------------|
+| Response Time (P95) | < 1000ms | < 2000ms | < 3000ms |
+| Error Rate | < 0.5% | < 1% | < 5% |
+| Availability | > 99.9% | > 99% | > 95% |
+| Throughput | Target RPS | 80% Target | 50% Target |
+
+---
+
+*Para documentación completa y guías detalladas, consulta [TESTING_GUIDE.md](./TESTING_GUIDE.md)*
     clientSecret: 'tu_client_secret',         // de tu Auth0 Application  
     audience: 'https://tu-dominio.auth0.com/api/v2/',
     tokenEndpoint: 'https://tu-dominio.auth0.com/oauth/token',
@@ -135,6 +297,72 @@ docker run --rm -d -v ${PWD}/stress-testing:/scripts --network host \
   - Success Rate (% éxito)
   - Auth Performance (tokens/segundo)
   - Test Summary (iteraciones completadas)
+
+## 🎯 Ejecución de Tests
+
+### Opción 1: Script Automatizado (Recomendado)
+
+#### Windows PowerShell:
+```powershell
+# Ejecutar todos los tests secuencialmente
+.\stress-testing\run-automated-tests.ps1
+
+# Ejecutar en paralelo por 3 minutos cada uno
+.\stress-testing\run-automated-tests.ps1 -Mode parallel -Duration 3
+
+# Solo test global por 10 minutos
+.\stress-testing\run-automated-tests.ps1 -Mode global -Duration 10
+
+# Seleccionar test específico
+.\stress-testing\run-automated-tests.ps1 -Mode individual
+```
+
+#### Linux/Mac:
+```bash
+# Hacer ejecutable
+chmod +x stress-testing/run-automated-tests.sh
+
+# Ejecutar todos los tests secuencialmente
+./stress-testing/run-automated-tests.sh
+
+# Ejecutar en paralelo por 3 minutos cada uno
+./stress-testing/run-automated-tests.sh -m parallel -d 3
+
+# Solo test global por 10 minutos
+./stress-testing/run-automated-tests.sh -m global -d 10
+
+# Seleccionar test específico
+./stress-testing/run-automated-tests.sh -m individual
+```
+
+### Opción 2: Ejecución Manual Individual
+
+```bash
+# Test de Order Service - Place Order
+k6 run --duration=5m --vus=20 stress-testing/k6-scripts/order-place-test.js
+
+# Test de Order Service - Get Details
+k6 run --duration=5m --vus=30 stress-testing/k6-scripts/order-details-test.js
+
+# Test de Payment Service
+k6 run --duration=5m --vus=25 stress-testing/k6-scripts/payment-service-test.js
+
+# Test de Product Service
+k6 run --duration=5m --vus=30 stress-testing/k6-scripts/product-service-test.js
+
+# Test Global del Ecosistema
+k6 run --duration=10m stress-testing/k6-scripts/ecosystem-global-test.js
+```
+
+### Opción 3: Tests con Docker
+
+```bash
+# Ejecutar con el stack de monitoreo
+docker-compose -f stress-testing/docker-compose-monitoring.yml run --rm k6 run /scripts/order-place-test.js
+docker-compose -f stress-testing/docker-compose-monitoring.yml run --rm k6 run /scripts/payment-service-test.js
+docker-compose -f stress-testing/docker-compose-monitoring.yml run --rm k6 run /scripts/product-service-test.js
+docker-compose -f stress-testing/docker-compose-monitoring.yml run --rm k6 run /scripts/ecosystem-global-test.js
+```
 
 ## 🔧 Comandos Útiles
 

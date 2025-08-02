@@ -3,6 +3,13 @@
 .env.local
 .env.production
 
+# Database credentials (NEVER COMMIT)
+.db-credentials.ps1
+.db-config.*
+
+# OAuth2 authentication files (NEVER COMMIT)
+oauth2-auth.js
+
 # Logs
 *.log
 npm-debug.log*
