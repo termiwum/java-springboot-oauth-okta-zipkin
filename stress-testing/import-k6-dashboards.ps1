@@ -61,32 +61,36 @@ catch {
 # Dashboards a importar
 $dashboards = @(
     @{
-        File = ".\grafana-dashboards\k6-test-methods-dashboard.json"
-        Name = "K6 Test Methods Dashboard"
+        File = ".\dashboards\ecosystem-global-dashboard.json"
+        Name = "Ecosystem Global Dashboard"
     },
     @{
-        File = ".\grafana-dashboards\k6-tested-endpoints-dashboard.json"
-        Name = "K6 Tested Endpoints Dashboard"
-    },
-    @{
-        File = ".\grafana-dashboards\k6-transaction-flow-dashboard.json"
-        Name = "K6 Transaction Flow Dashboard"
-    },
-    @{
-        File = ".\grafana-dashboards\k6-dashboard.json"
-        Name = "K6 Load Testing Dashboard"
-    },
-    @{
-        File = ".\grafana-dashboards\product-service-dashboard.json"
+        File = ".\dashboards\product-service-dashboard.json"
         Name = "Product Service Dashboard"
     },
     @{
-        File = ".\grafana-dashboards\order-service-dashboard.json"
-        Name = "Order Service Dashboard"
+        File = ".\dashboards\payment-service-dashboard.json"
+        Name = "Payment Service Dashboard"
     },
     @{
-        File = ".\grafana-dashboards\payment-service-dashboard.json"
-        Name = "Payment Service Dashboard"
+        File = ".\dashboards\order-place-dashboard.json"
+        Name = "Order Place Dashboard"
+    },
+    @{
+        File = ".\dashboards\order-details-dashboard.json"
+        Name = "Order Details Dashboard"
+    },
+    @{
+        File = ".\monitoring-config\grafana\dashboards\k6-auto-dashboard.json"
+        Name = "K6 Auto Dashboard"
+    },
+    @{
+        File = ".\monitoring-config\grafana\dashboards\k6-simple-dashboard.json"
+        Name = "K6 Simple Dashboard"
+    },
+    @{
+        File = ".\monitoring-config\grafana\dashboards\k6-prometheus-dashboard.json"
+        Name = "K6 Prometheus Dashboard"
     }
 )
 
@@ -111,12 +115,13 @@ Write-Host "IMPORTACIÓN COMPLETADA" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Dashboards disponibles en Grafana:" -ForegroundColor White
-Write-Host "• K6 Test Methods: $grafanaUrl/d/k6-test-methods" -ForegroundColor Gray
-Write-Host "• K6 Tested Endpoints: $grafanaUrl/d/k6-tested-endpoints" -ForegroundColor Gray
-Write-Host "• K6 Transaction Flow: $grafanaUrl/d/k6-transaction-flow" -ForegroundColor Gray
-Write-Host "• K6 Load Testing: $grafanaUrl/d/k6-dashboard" -ForegroundColor Gray
+Write-Host "• Ecosystem Global: $grafanaUrl/d/ecosystem-global" -ForegroundColor Gray
 Write-Host "• Product Service: $grafanaUrl/d/product-service" -ForegroundColor Gray
-Write-Host "• Order Service: $grafanaUrl/d/order-service" -ForegroundColor Gray
 Write-Host "• Payment Service: $grafanaUrl/d/payment-service" -ForegroundColor Gray
+Write-Host "• Order Place: $grafanaUrl/d/order-place" -ForegroundColor Gray
+Write-Host "• Order Details: $grafanaUrl/d/order-details" -ForegroundColor Gray
+Write-Host "• K6 Auto: $grafanaUrl/d/k6-auto" -ForegroundColor Gray
+Write-Host "• K6 Simple: $grafanaUrl/d/k6-simple" -ForegroundColor Gray
+Write-Host "• K6 Prometheus: $grafanaUrl/d/k6-prometheus" -ForegroundColor Gray
 Write-Host ""
-Write-Host "Los dashboards están listos para monitorear las pruebas de estrés" -ForegroundColor Green
+Write-Host "Los dashboards estan listos para monitorear las pruebas de estres" -ForegroundColor Green

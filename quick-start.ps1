@@ -48,11 +48,53 @@ Write-Host "Fase 5: Iniciando API Gateway..." -ForegroundColor Yellow
 Start-Sleep 20  # Esperar a que los servicios se registren
 docker-compose up -d cloud-gateway
 
+# Fase 6: Iniciar stack de monitoreo
+Write-Host "Fase 6: Iniciando stack de monitoreo..." -ForegroundColor Yellow
+cd stress-testing
+docker-compose -f docker-compose-monitoring.yml up -d
+cd ..
+Write-Host "Esperando que Grafana esté completamente listo..." -ForegroundColor Gray
+Start-Sleep 30  # Esperar más tiempo que Grafana esté listo
+
+# Fase 7: Importar dashboards de Grafana
+Write-Host "Fase 7: Importando dashboards de Grafana..." -ForegroundColor Yellow
+
+# Verificar que Grafana responda antes de importar
+$grafanaReady = $false
+$attempts = 0
+$maxAttempts = 10
+
+while (-not $grafanaReady -and $attempts -lt $maxAttempts) {
+    try {
+        $health = Invoke-RestMethod -Uri "http://localhost:3000/api/health" -Method GET -TimeoutSec 5
+        $grafanaReady = $true
+        Write-Host "✅ Grafana está listo" -ForegroundColor Green
+    } catch {
+        $attempts++
+        Write-Host "Esperando que Grafana responda... (intento $attempts/$maxAttempts)" -ForegroundColor Gray
+        Start-Sleep 5
+    }
+}
+
+if ($grafanaReady) {
+    try {
+        cd stress-testing
+        & ".\import-dashboards-fixed.ps1"
+        cd ..
+        Write-Host "✅ Dashboards importados correctamente" -ForegroundColor Green
+    } catch {
+        Write-Host "⚠️ Error importando dashboards: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host "Continuando con el startup..." -ForegroundColor Gray
+    }
+} else {
+    Write-Host "⚠️ Grafana no respondió a tiempo, saltando importación de dashboards" -ForegroundColor Yellow
+}
+
 $endTime = Get-Date
 $totalTime = ($endTime - $startTime).TotalSeconds
 
 Write-Host ""
-Write-Host "Ecosistema iniciado!" -ForegroundColor Green
+Write-Host "🎉 Ecosistema completamente iniciado!" -ForegroundColor Green
 Write-Host "Tiempo total: $totalTime segundos" -ForegroundColor Green
 Write-Host ""
 Write-Host "URLs disponibles:" -ForegroundColor Cyan
@@ -60,6 +102,8 @@ Write-Host "  - Eureka Dashboard: http://localhost:8761" -ForegroundColor White
 Write-Host "  - API Gateway:      http://localhost:9090" -ForegroundColor White
 Write-Host "  - Config Server:    http://localhost:9296" -ForegroundColor White
 Write-Host "  - Zipkin Tracing:   http://localhost:9411" -ForegroundColor White
+Write-Host "  - Grafana (admin/admin): http://localhost:3000" -ForegroundColor White
+Write-Host "  - InfluxDB:         http://localhost:8087" -ForegroundColor White
 Write-Host ""
 Write-Host "Estado de servicios:" -ForegroundColor Cyan
 docker-compose ps

@@ -171,7 +171,7 @@
                     "refId": "C"
                 }
             ],
-            "title": "📦 Product Service Operations Rate",
+            "title": "Product Service Operations Rate",
             "type": "timeseries"
         },
         {
@@ -348,7 +348,7 @@
                     "refId": "F"
                 }
             ],
-            "title": "⏱️ Product Service Response Times",
+            "title": "Product Service Response Times",
             "type": "timeseries"
         },
         {
@@ -418,7 +418,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "❌ Product Error Rate",
+            "title": "Product Error Rate",
             "type": "stat"
         },
         {
@@ -488,7 +488,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "✅ Successful Operations",
+            "title": "Successful Operations",
             "type": "stat"
         },
         {
@@ -554,7 +554,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "📦 Product Operations Distribution",
+            "title": "Product Operations Distribution",
             "type": "piechart"
         }
     ],
@@ -574,7 +574,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "📦 Product Service Test Dashboard",
+    "title": "Product Service Test Dashboard",
     "uid": "product-service-test",
     "version": 1,
     "weekStart": ""

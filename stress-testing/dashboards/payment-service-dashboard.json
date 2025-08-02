@@ -148,7 +148,7 @@
                     "refId": "B"
                 }
             ],
-            "title": "💳 Payment Service Requests Rate",
+            "title": "Payment Service Requests Rate",
             "type": "timeseries"
         },
         {
@@ -294,7 +294,7 @@
                     "refId": "D"
                 }
             ],
-            "title": "⏱️ Payment Service Response Times",
+            "title": "Payment Service Response Times",
             "type": "timeseries"
         },
         {
@@ -364,7 +364,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "❌ Payment Error Rate",
+            "title": "Payment Error Rate",
             "type": "stat"
         },
         {
@@ -434,7 +434,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "✅ Successful Payments",
+            "title": "Successful Payments",
             "type": "stat"
         },
         {
@@ -500,7 +500,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "💳 Payment Operations Distribution",
+            "title": "Payment Operations Distribution",
             "type": "piechart"
         }
     ],
@@ -520,7 +520,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "💳 Payment Service Test Dashboard",
+    "title": "Payment Service Test Dashboard",
     "uid": "payment-service-test",
     "version": 1,
     "weekStart": ""

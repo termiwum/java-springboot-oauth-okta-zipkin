@@ -1,0 +1,54 @@
+{
+    "dashboard": {
+        "id": null,
+        "title": "K6 Load Testing Dashboard",
+        "tags": [
+            "k6",
+            "load-testing"
+        ],
+        "timezone": "browser",
+        "panels": [
+            {
+                "id": 1,
+                "title": "HTTP Requests",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "http_reqs",
+                        "refId": "A"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                }
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {
+                    "h": 8,
+                    "w": 12,
+                    "x": 0,
+                    "y": 0
+                }
+            }
+        ],
+        "time": {
+            "from": "now-5m",
+            "to": "now"
+        },
+        "timepicker": {},
+        "refresh": "5s",
+        "version": 1,
+        "uid": "k6-dashboard"
+    },
+    "overwrite": true
+}

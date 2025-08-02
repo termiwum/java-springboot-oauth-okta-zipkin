@@ -109,7 +109,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "📋 Order Details Requests Rate",
+            "title": "Order Details Requests Rate",
             "type": "timeseries"
         },
         {
@@ -247,7 +247,7 @@
                     "refId": "C"
                 }
             ],
-            "title": "⏱️ Order Details Response Time",
+            "title": "Order Details Response Time",
             "type": "timeseries"
         },
         {
@@ -317,7 +317,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "❌ Error Rate",
+            "title": "Error Rate",
             "type": "stat"
         },
         {
@@ -387,7 +387,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "✅ Successful Retrievals",
+            "title": "Successful Retrievals",
             "type": "stat"
         },
         {
@@ -478,7 +478,7 @@
                     "refId": "A"
                 }
             ],
-            "title": "🔗 Service Chain Response Time",
+            "title": "Service Chain Response Time",
             "type": "timeseries"
         }
     ],
@@ -499,7 +499,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "📋 Order Details Test Dashboard",
+    "title": "Order Details Test Dashboard",
     "uid": "order-details-test",
     "version": 1,
     "weekStart": ""
