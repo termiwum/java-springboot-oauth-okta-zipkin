@@ -471,3 +471,4 @@ Para integrar en pipelines CI/CD:
 - [InfluxDB Flux Language](https://docs.influxdata.com/flux/)
 - [Grafana Dashboards](https://grafana.com/docs/grafana/latest/dashboards/)
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
+
