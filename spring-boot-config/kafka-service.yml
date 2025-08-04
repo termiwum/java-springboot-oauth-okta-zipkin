@@ -3,6 +3,8 @@ spring:
     name: kafka-service
   kafka:
     bootstrap-servers: kafka:9092
+  config:
+    import: optional:configserver:http://config-server:9296
 
 server:
   port: 9093
