@@ -1,10 +1,10 @@
 spring:
   application:
-    name: kafka-service
+    name: KAFKA-SERVICE
   kafka:
     bootstrap-servers: kafka:9092
   config:
-    import: optional:configserver:http://config-server:9296
+    import: configserver:http://${CONFIG_SERVER_HOST:localhost}:9296
 
 server:
   port: 9093
@@ -16,4 +16,4 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: ${EUREKA_SERVER_ADDRESS:http://service-registry:8761/eureka}
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://${EUREKA_HOST:localhost}:8761/eureka}
