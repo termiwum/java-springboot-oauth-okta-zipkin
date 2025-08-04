@@ -16,23 +16,4 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: ${EUREKA_SERVER_ADDRESS:http://${EUREKA_HOST:localhost}:8761/eureka}
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0 # Enviar el 100% de las trazas
-  zipkin:
-    tracing:
-      endpoint: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans # URL del endpoint de Zipkin
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-
-logging:
-  level:
-    '[io.micrometer.tracing]': DEBUG # Nivel de registro para trazas
-    '[org.springframework]': INFO   # Nivel de registro para Spring
-    '[org.springframework.cloud.config]': DEBUG
-    '[org.springframework.web]': DEBUG
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://service-registry:8761/eureka}
