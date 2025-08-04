@@ -1,6 +1,6 @@
 spring:
   application:
-    name: KAFKA-SERVICE
+    name: kafka-service
   kafka:
     bootstrap-servers: kafka:9092
   config:
